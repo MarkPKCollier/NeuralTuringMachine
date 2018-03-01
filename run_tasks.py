@@ -36,8 +36,7 @@ parser.add_argument('--eval_batch_size', type=int, default=640)
 parser.add_argument('--curriculum', type=str, default='none', help='none | uniform | naive | look_back | look_back_and_forward | prediction_gain')
 parser.add_argument('--pad_to_max_seq_len', type=str2bool, default=False)
 
-parser.add_argument('--task', type=str, default='copy',
-    help='copy | associative_recall | traversal | shortest_path')
+parser.add_argument('--task', type=str, default='copy', help='copy | associative_recall')
 parser.add_argument('--num_bits_per_vector', type=int, default=8)
 parser.add_argument('--max_seq_len', type=int, default=20)
 
@@ -53,8 +52,8 @@ if args.mann == 'ntm':
 
 if args.verbose:
     import pickle
-    HEAD_LOG_FILE = '../head_logs/{0}.p'.format(args.experiment_name)
-    GENERALIZATION_HEAD_LOG_FILE = '../head_logs/generalization_{0}.p'.format(args.experiment_name)
+    HEAD_LOG_FILE = 'head_logs/{0}.p'.format(args.experiment_name)
+    GENERALIZATION_HEAD_LOG_FILE = 'head_logs/generalization_{0}.p'.format(args.experiment_name)
 
 class BuildModel(object):
     def __init__(self, max_seq_len, inputs, mode):
