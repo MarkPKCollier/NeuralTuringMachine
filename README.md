@@ -1,10 +1,27 @@
 # Neural Turing Machine
 
-This repository contains a Tensorflow implementation of a Neural Turing Machine and the Copy and Associative Recall tasks from the [original paper](https://arxiv.org/abs/1410.5401).
+This repository contains a stable, successful Tensorflow implementation of a Neural Turing Machine which has been tested on the Copy, Repeat Copy and Associative Recall tasks from the [original paper](https://arxiv.org/abs/1410.5401).
 
-The implementation is based on: https://github.com/snowkylin/ntm but contains some substantial modifications. Most importantly, I backpropagate through the initialization of the memory contents and find this works much better than constant or random memory initialization. Additionally the NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc. I never see loss go to NaN as some other implementations report (although convergence is slow and unstable on some training runs).
+The implementation is based on: https://github.com/snowkylin/ntm but contains some substantial modifications. Most importantly, I compare three different memory initialization schemes and find that initializing the memory contents of a Neural Turing Machine to small constant values works much better than random initilization or backpropagating through memory initialization. I never see loss go to NaN as some other implementations report (although convergence is slow and unstable on some training runs).
 
-I replicated the hyperparameters from the [original paper](https://arxiv.org/abs/1410.5401) for the 2 tasks:
+The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc.
+
+## Usage
+
+```
+cell = NTMCell(num_controller_layers, num_controller_units, num_memory_locations, memory_size,
+    num_read_heads, num_write_heads, shift_range=3, output_dim=num_bits_per_output_vector,
+    clip_value=clip_controller_output_to_value)
+
+outputs, _ = tf.nn.dynamic_rnn(
+    cell=cell,
+    inputs=inputs,
+    time_major=False)
+'''
+
+## Sample Outputs
+
+Below are some sample outputs on the Copy and Associative Recall tasks. I replicated the hyperparameters from the [original paper](https://arxiv.org/abs/1410.5401) for the 2 tasks:
 
 - Memory Size: 128 X 20
 - Controller: LSTM - 100 units
@@ -34,12 +51,4 @@ As you can see from the below graphs, the network first writes the sequence to m
 #### Read head locations of NTM with 32 memory locations trained on Copy task:
 ![Read head locations of NTM with 32 memory locations trained on Copy task](/img/ntm_copy_read_head.png)
 
-I also compared the learning curves on 3 training runs (with different random seeds) of my Neural Turing Machine implementation to the [reference Differentiable Neural Computer implementation](https://github.com/deepmind/dnc) and the [Tensorflow BasicLSTM cell](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/BasicLSTMCell).
-
-As you can see from the below graphs on 2 out 3 training runs for both the Copy and Associative Recall tasks the NTM performs comparably to the results in the NTM paper (although there is some instability after convergence on one of the training runs). My NTM implementation is slow to converge on 1 out of the 3 training runs - I am unclear as to why this is the case, perhaps it is our implementation e.g. parameter initialization.
-
-#### Comparison of learning curves of NTM, DNC and LSTM on 3 training runs on the Copy task each:
-![Comparison of learning curves of NTM, DNC and LSTM on 3 training runs on the Copy task each](/img/copy_task_archiecture_comparison.png)
-
-#### Comparison of learning curves of NTM, DNC and LSTM on 3 training runs on the Associative Recall task each:
-![Comparison of learning curves of NTM, DNC and LSTM on 3 training runs on the Associative Recall task each](/img/associative_recall_archiecture_comparison.png)
+Further results on memory initilization comparison and learning curves to come...
