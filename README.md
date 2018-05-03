@@ -17,7 +17,7 @@ outputs, _ = tf.nn.dynamic_rnn(
     cell=cell,
     inputs=inputs,
     time_major=False)
-'''
+```
 
 ## Sample Outputs
 
