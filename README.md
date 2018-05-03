@@ -2,13 +2,15 @@
 
 This repository contains a stable, successful Tensorflow implementation of a Neural Turing Machine which has been tested on the Copy, Repeat Copy and Associative Recall tasks from the [original paper](https://arxiv.org/abs/1410.5401).
 
-The implementation is based on: https://github.com/snowkylin/ntm but contains some substantial modifications. Most importantly, I compare three different memory initialization schemes and find that initializing the memory contents of a Neural Turing Machine to small constant values works much better than random initilization or backpropagating through memory initialization. I never see loss go to NaN as some other implementations report (although convergence is slow and unstable on some training runs).
+The implementation is based on: https://github.com/snowkylin/ntm but contains some substantial modifications. Most importantly, I compare three different memory initialization schemes and find that initializing the memory contents of a Neural Turing Machine to small constant values works much better than random initilization or backpropagating through memory initialization. I never see loss go to NaN as some other implementations report.
 
 The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc.
 
 ## Usage
 
-```
+```python
+from ntm import NTMCell
+
 cell = NTMCell(num_controller_layers, num_controller_units, num_memory_locations, memory_size,
     num_read_heads, num_write_heads, shift_range=3, output_dim=num_bits_per_output_vector,
     clip_value=clip_controller_output_to_value)
