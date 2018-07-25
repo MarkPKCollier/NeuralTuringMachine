@@ -6,6 +6,10 @@ The implementation is based on: https://github.com/snowkylin/ntm but contains so
 
 The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc.
 
+### Paper
+
+For a description of our implementation and experimental results please see the pre-print of our paper which will appear at ICANN 2018: https://arxiv.org/abs/1807.08518
+
 ## Usage
 
 ```python
