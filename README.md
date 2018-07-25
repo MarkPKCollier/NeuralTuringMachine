@@ -10,6 +10,14 @@ The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow
 
 For a description of our implementation and experimental results please see the pre-print of our paper which will appear at ICANN 2018: https://arxiv.org/abs/1807.08518
 
+You can cite the paper as follows:
+
+```
+@article{collier2018ntms, title={Implementing Neural Turing Machines,
+author={Collier, Mark and Beel, Joeran},
+journal={International Conference on Artificial Neural Networks, ICANN.}, year={2018}}
+```
+
 ## Usage
 
 ```python
