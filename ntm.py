@@ -14,7 +14,7 @@ NTMControllerState = collections.namedtuple('NTMControllerState', ('controller_s
 class NTMCell(tf.contrib.rnn.RNNCell):
     def __init__(self, controller_layers, controller_units, memory_size, memory_vector_dim, read_head_num, write_head_num,
                  addressing_mode='content_and_location', shift_range=1, reuse=False, output_dim=None, clip_value=20,
-                 init_mode='learned'):
+                 init_mode='constant'):
         self.controller_layers = controller_layers
         self.controller_units = controller_units
         self.memory_size = memory_size
