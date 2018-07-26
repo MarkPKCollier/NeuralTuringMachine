@@ -2,8 +2,6 @@ For a description of our implementation and experimental results please see the 
 
 **Our key contribution is not to implement a Neural Turing Machine in code but to make training stable and reliable. We do not observe the slow learning or gradients becoming NaN that other implementations have reported.**
 
-> After 4 years, someone finally implemented a stable version of NTM - David Ha, Google Brain
-
 You can cite the paper as follows:
 
 ```
