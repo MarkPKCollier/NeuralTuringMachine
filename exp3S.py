@@ -1,3 +1,4 @@
+from __future__ import print_function
 import bisect
 import numpy as np
 
@@ -74,10 +75,10 @@ def test():
         exp3s.update_w(reward, 1)
 
         if i % 10000 == 0:
-            print 'task:', k, 'reward:', reward, 'scaled_reward', exp3s.r
-            print 'weights:', exp3s.w
-            print 'prob:', exp3s.pi
+            print('task:', k, 'reward:', reward, 'scaled_reward', exp3s.r)
+            print('weights:', exp3s.w)
+            print('prob:', exp3s.pi)
 
-    print 'final weights:', exp3s.w
+    print('final weights:', exp3s.w)
 
 # test()
