@@ -1,7 +1,9 @@
-# credit: thanks to https://github.com/snowkylin/ntm for the basis of this code
+# credit: this code is derived from https://github.com/snowkylin/ntm
 # the major changes made are to make this compatible with the abstract class tf.contrib.rnn.RNNCell
-# additionally an LSTM controller is used, a feed-forward controller may be used
-# and 2 memory inititialization schemes are offered
+# an LSTM controller is used instead of a RNN controller
+# 3 memory inititialization schemes are offered instead of 1
+# the outputs of the controller heads are clipped to an absolute value
+# we find that our modification result in more reliable training (we never observe gradients going to NaN) and faster convergence
 
 import numpy as np
 import tensorflow as tf
