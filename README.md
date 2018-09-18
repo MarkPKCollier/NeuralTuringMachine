@@ -2,8 +2,6 @@ For a description of our implementation and experimental results please see the 
 
 **Our key contribution is not to implement a Neural Turing Machine in code but to make training stable and reliable. We do not observe the slow learning or gradients becoming NaN that other implementations have reported.**
 
-> After 4 years, someone finally implemented a stable version of NTM - David Ha, Google Brain
-
 You can cite the paper as follows:
 
 ```
@@ -19,10 +17,6 @@ at the [Adapt Centre, Trinity College Dublin](https://www.adaptcentre.ie/) as pa
 
 This repository contains a stable, successful Tensorflow implementation of a Neural Turing Machine which has been tested on the Copy, Repeat Copy and Associative Recall tasks from the [original paper](https://arxiv.org/abs/1410.5401).
 
-The implementation is based on: https://github.com/snowkylin/ntm but contains some substantial modifications. Most importantly, we compare three different memory initialization schemes and find that initializing the memory contents of a Neural Turing Machine to small constant values works much better than random initilization or backpropagating through memory initialization. We never see loss go to NaN as some other implementations report.
-
-The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc.
-
 ## Usage
 
 ```python
@@ -37,6 +31,13 @@ outputs, _ = tf.nn.dynamic_rnn(
     inputs=inputs,
     time_major=False)
 ```
+
+The implementation is derived from https://github.com/snowkylin/ntm, another open source NTM implementation. We make small but meaningful changes to the linked code that have a large effect on making our implementation more reliable to train and faster to converge as well as being easier to integrate with Tensorflow. Our contribution is:
+- We compare three different memory initialization schemes and find that initializing the memory contents of a Neural Turing Machine to small constant values works much better than random initilization or backpropagating through memory initialization.
+- We clip the outputs from the NTM controller into a range, which helps with optimization difficulties.
+- The NTMCell implements the [Tensorflow RNNCell interface](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/RNNCell) so can be used directly with [tf.nn.dynamic_rnn](https://www.tensorflow.org/api_docs/python/tf/nn/dynamic_rnn), etc.
+- We never see loss go to NaN as some other implementations report.
+- We implement 3 of the 5 tasks from the NTM paper. We run many experiments and report convergence speed and generalization performance for our implementation, compared to an LSTM, a DNC and for 3 memory contents initialization schemes.
 
 ## Sample Outputs
 
