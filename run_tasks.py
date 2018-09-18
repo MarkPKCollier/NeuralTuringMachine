@@ -48,6 +48,7 @@ parser.add_argument('--steps_per_eval', type=int, default=200)
 args = parser.parse_args()
 
 if args.mann == 'ntm':
+    # from tensorflow.contrib.rnn.python.ops.rnn_cell import NTMCell
     from ntm import NTMCell
 
 if args.verbose:
@@ -78,18 +79,29 @@ class BuildModel(object):
                 for _ in range(args.num_layers))
 
         elif args.mann == 'ntm':
-            cell = NTMCell(args.num_layers, args.num_units, args.num_memory_locations, args.memory_size,
-                args.num_read_heads, args.num_write_heads, addressing_mode='content_and_location',
-                shift_range=args.conv_shift_range, reuse=False, output_dim=args.num_bits_per_vector,
-                clip_value=args.clip_value, init_mode=args.init_mode)
+            # cell = NTMCell(args.num_layers, args.num_units, args.num_memory_locations, args.memory_size,
+            #     args.num_read_heads, args.num_write_heads, addressing_mode='content_and_location',
+            #     shift_range=args.conv_shift_range, reuse=False, output_dim=args.num_bits_per_vector,
+            #     clip_value=args.clip_value, init_mode=args.init_mode)
+            def single_cell(num_units):
+                return tf.contrib.rnn.BasicLSTMCell(num_units, forget_bias=1.0)
 
-            initial_state = cell.zero_state(args.batch_size, tf.float32)
+            controller = tf.contrib.rnn.MultiRNNCell(
+                [single_cell(args.num_units) for _ in range(args.num_layers)])
+
+            cell = NTMCell(controller, args.num_memory_locations, args.memory_size,
+                args.num_read_heads, args.num_write_heads, shift_range=args.conv_shift_range,
+                reuse=False, output_dim=args.num_bits_per_vector,
+                clip_value=args.clip_value)
+
+            # initial_state = cell.zero_state(args.batch_size, tf.float32)
         
         output_sequence, _ = tf.nn.dynamic_rnn(
             cell=cell,
             inputs=self.inputs,
             time_major=False,
-            initial_state=initial_state)
+            dtype=tf.float32,
+            initial_state=initial_state if args.mann == 'none' else None)
 
         if args.task == 'copy':
             self.output_logits = output_sequence[:, self.max_seq_len+1:, :]
