@@ -260,11 +260,11 @@ class TraversalData:
             path.append((cur_node, next_node, edge_label))
             cur_node = next_node
 
-        outputs = map(lambda (source, dest, edge):
+        outputs = map(lambda t:
             np.concatenate((
-                graph_label_to_one_hot(source),
-                graph_label_to_one_hot(dest),
-                graph_label_to_one_hot(edge)
+                graph_label_to_one_hot(t[0]),
+                graph_label_to_one_hot(t[1]),
+                graph_label_to_one_hot(t[2])
             )),
             path)
 
@@ -275,11 +275,11 @@ class TraversalData:
             [1, 0]
         ))
         
-        other_queries = map(lambda (source, dest, edge):
+        other_queries = map(lambda t:
             np.concatenate((
                 graph_label_to_one_hot(-1),
                 graph_label_to_one_hot(-1),
-                graph_label_to_one_hot(edge),
+                graph_label_to_one_hot(t[2]),
                 [1, 0]
             )),
             path[1:])
@@ -362,15 +362,15 @@ class TraversalData:
 
         errors = 0
         for i in range(num_seq):
-            source_digit_same = all(map(lambda (t1, t2): t1 == t2, zip(target_source_digits[i], pred_source_digits[i])))
+            source_digit_same = all(map(lambda t: t[0] == t[1], zip(target_source_digits[i], pred_source_digits[i])))
             if not source_digit_same:
                 errors += 1
                 continue
-            target_digit_same = all(map(lambda (t1, t2): t1 == t2, zip(target_dest_digits[i], pred_dest_digits[i])))
+            target_digit_same = all(map(lambda t: t[0] == t[1], zip(target_dest_digits[i], pred_dest_digits[i])))
             if not target_digit_same:
                 errors += 1
                 continue
-            target_edge_same = all(map(lambda (t1, t2): t1 == t2, zip(target_edge_digits[i], pred_edge_digits[i])))
+            target_edge_same = all(map(lambda t: t[0] == t[1], zip(target_edge_digits[i], pred_edge_digits[i])))
             if not target_edge_same:
                 errors += 1
                 continue

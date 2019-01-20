@@ -60,10 +60,9 @@ if args.verbose:
     GENERALIZATION_HEAD_LOG_FILE = 'head_logs/generalization_{0}.p'.format(args.experiment_name)
 
 class BuildModel(object):
-    def __init__(self, max_seq_len, inputs, mode):
+    def __init__(self, max_seq_len, inputs):
         self.max_seq_len = max_seq_len
         self.inputs = inputs
-        self.mode = mode
         self._build_model()
 
     def _build_model(self):
@@ -96,7 +95,7 @@ class BuildModel(object):
 
                 cell = NTMCell(controller, args.num_memory_locations, args.memory_size,
                     args.num_read_heads, args.num_write_heads, shift_range=args.conv_shift_range,
-                    reuse=False, output_dim=args.num_bits_per_vector,
+                    output_dim=args.num_bits_per_vector,
                     clip_value=args.clip_value)
         
         output_sequence, _ = tf.nn.dynamic_rnn(
@@ -114,9 +113,9 @@ class BuildModel(object):
         if args.task in ('copy', 'associative_recall'):
             self.outputs = tf.sigmoid(self.output_logits)
 
-class BuildTrainModel(BuildModel):
+class BuildTModel(BuildModel):
     def __init__(self, max_seq_len, inputs, outputs):
-        super(BuildTrainModel, self).__init__(max_seq_len, inputs, tf.contrib.learn.ModeKeys.TRAIN)
+        super(BuildTModel, self).__init__(max_seq_len, inputs)
 
         if args.task in ('copy', 'associative_recall'):
             cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=outputs, logits=self.output_logits)
@@ -131,25 +130,12 @@ class BuildTrainModel(BuildModel):
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, trainable_variables), args.max_grad_norm)
         self.train_op = optimizer.apply_gradients(zip(grads, trainable_variables))
 
-class BuildEvalModel(BuildModel):
-    def __init__(self, max_seq_len, inputs, outputs):
-        super(BuildEvalModel, self).__init__(max_seq_len, inputs, tf.contrib.learn.ModeKeys.EVAL)
-
-        if args.task in ('copy', 'associative_recall'):
-            self.loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=outputs, logits=self.output_logits))/args.batch_size
-
 with tf.variable_scope('root'):
-    train_max_seq_len = tf.placeholder(tf.int32)
-    train_inputs = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector+1))
-    train_outputs = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
-    train_model = BuildTrainModel(train_max_seq_len, train_inputs, train_outputs)
+    max_seq_len_placeholder = tf.placeholder(tf.int32)
+    inputs_placeholder = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector+1))
+    outputs_placeholder = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
+    model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
     initializer = tf.global_variables_initializer()
-
-with tf.variable_scope('root', reuse=True):
-    eval_max_seq_len = tf.placeholder(tf.int32)
-    eval_inputs = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector+1))
-    eval_outputs = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
-    eval_model = BuildEvalModel(eval_max_seq_len, eval_inputs, eval_outputs)
 
 # training
 
@@ -190,11 +176,11 @@ def run_eval(batches, store_heat_maps=False, generalization_num=None):
     task_error = 0
     num_batches = len(batches)
     for seq_len, inputs, labels in batches:
-        task_loss_, outputs = sess.run([eval_model.loss, eval_model.outputs],
+        task_loss_, outputs = sess.run([model.loss, model.outputs],
             feed_dict={
-                eval_inputs: inputs,
-                eval_outputs: labels,
-                eval_max_seq_len: seq_len
+                inputs_placeholder: inputs,
+                outputs_placeholder: labels,
+                max_seq_len_placeholder: seq_len
             })
 
         task_loss += task_loss_
@@ -310,11 +296,11 @@ for i in range(args.num_train_steps):
         pad_to_max_seq_len=args.pad_to_max_seq_len
     )[0]
 
-    train_loss, _, outputs = sess.run([train_model.loss, train_model.train_op, train_model.outputs],
+    train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
         feed_dict={
-            train_inputs: inputs,
-            train_outputs: labels,
-            train_max_seq_len: seq_len
+            inputs_placeholder: inputs,
+            outputs_placeholder: labels,
+            max_seq_len_placeholder: seq_len
         })
 
     if args.curriculum == 'prediction_gain':
