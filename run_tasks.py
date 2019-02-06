@@ -214,7 +214,7 @@ def run_eval(batches, store_heat_maps=False, generalization_num=None):
 def eval_performance(curriculum_point, store_heat_maps=False):
     # target task
     batches = data_generator.generate_batches(
-        (args.eval_batch_size/2)/args.batch_size,
+        int(int(args.eval_batch_size/2)/args.batch_size),
         args.batch_size,
         bits_per_vector=args.num_bits_per_vector,
         curriculum_point=None,
@@ -228,7 +228,7 @@ def eval_performance(curriculum_point, store_heat_maps=False):
     # multi-task
 
     batches = data_generator.generate_batches(
-        args.eval_batch_size/args.batch_size,
+        int(args.eval_batch_size/args.batch_size),
         args.batch_size,
         bits_per_vector=args.num_bits_per_vector,
         curriculum_point=None,
@@ -242,7 +242,7 @@ def eval_performance(curriculum_point, store_heat_maps=False):
     # curriculum point
     if curriculum_point is not None:
         batches = data_generator.generate_batches(
-            (args.eval_batch_size/4)/args.batch_size,
+            int(int(args.eval_batch_size/4)/args.batch_size),
             args.batch_size,
             bits_per_vector=args.num_bits_per_vector,
             curriculum_point=curriculum_point,
