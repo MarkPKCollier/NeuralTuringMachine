@@ -26,8 +26,8 @@ parser.add_argument('--conv_shift_range', type=int, default=1, help='only necess
 parser.add_argument('--clip_value', type=int, default=20, help='Maximum absolute value of controller and outputs.')
 parser.add_argument('--init_mode', type=str, default='learned', help='learned | constant | random')
 
-parser.add_argument('--optimizer', type=str, default='RMSProp', help='RMSProp | Adam')
-parser.add_argument('--learning_rate', type=float, default=1e-4)
+parser.add_argument('--optimizer', type=str, default='Adam', help='RMSProp | Adam')
+parser.add_argument('--learning_rate', type=float, default=0.001)
 parser.add_argument('--max_grad_norm', type=float, default=50)
 parser.add_argument('--num_train_steps', type=int, default=31250)
 parser.add_argument('--batch_size', type=int, default=32)
