@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser()
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
-parser.add_argument('--mann', type=str, default='none', help='none | ntm')
+parser.add_argument('--mann', type=str, default='ntm', help='none | ntm')
 parser.add_argument('--num_layers', type=int, default=1)
 parser.add_argument('--num_units', type=int, default=100)
 parser.add_argument('--num_memory_locations', type=int, default=128)
