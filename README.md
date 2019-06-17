@@ -1,6 +1,8 @@
+**Update 2019-05-26: Google has integrated our NTM implementation into the official TensorFlow release. For more details read here: https://www.scss.tcd.ie/joeran.beel/blog/2019/05/25/google-integrates-our-neural-turing-machine-implementation-in-tensorflow/**
+
 For a description of our implementation and experimental results please see the pre-print of our paper which will appear as a conference paper at ICANN 2018: https://arxiv.org/abs/1807.08518
 
-**Our key contribution is not to implement a Neural Turing Machine in code but to make training stable and reliable. We do not observe the slow learning or gradients becoming NaN that other implementations have reported.**
+Our key contribution is not to implement a Neural Turing Machine in code but to make training stable and reliable. We do not observe the slow learning or gradients becoming NaN that other implementations have reported.
 
 You can cite the paper as follows:
 
