@@ -104,3 +104,9 @@ ENV/
 
 # PyCharm
 .idea
+
+# macOS
+.DS_Store
+
+# training artifacts
+models

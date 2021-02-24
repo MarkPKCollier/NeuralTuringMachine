@@ -45,7 +45,8 @@ def run_eval(sess, model, inputs_placeholder, outputs_placeholder, max_seq_len_p
 
 
 def eval_performance(sess, data_generator, args, model, target_point, labels, outputs, inputs, inputs_placeholder,
-                     outputs_placeholder, max_seq_len_placeholder, curriculum_point, store_heat_maps=False):
+                     outputs_placeholder, max_seq_len_placeholder, curriculum_point, store_heat_maps=False,
+                     skip_multi_task=False):
     # target task
     batches = data_generator.generate_batches(
         int(int(args.eval_batch_size / 2) / args.batch_size),
@@ -72,21 +73,25 @@ def eval_performance(sess, data_generator, args, model, target_point, labels, ou
 
     # multi-task
 
-    batches = data_generator.generate_batches(
-        int(args.eval_batch_size / args.batch_size),
-        args.batch_size,
-        bits_per_vector=args.num_bits_per_vector,
-        curriculum_point=None,
-        max_seq_len=args.max_seq_len,
-        curriculum='deterministic_uniform',
-        pad_to_max_seq_len=args.pad_to_max_seq_len
-    )
+    multi_task_loss = None
+    multi_task_error = None
+    if not skip_multi_task:
+        batches = data_generator.generate_batches(
+            int(args.eval_batch_size / args.batch_size),
+            args.batch_size,
+            bits_per_vector=args.num_bits_per_vector,
+            curriculum_point=None,
+            max_seq_len=args.max_seq_len,
+            curriculum='deterministic_uniform',
+            pad_to_max_seq_len=args.pad_to_max_seq_len
+        )
 
-    multi_task_loss, multi_task_error = run_eval(sess, model, inputs_placeholder, outputs_placeholder,
-                                                 max_seq_len_placeholder, data_generator, args, target_point, labels,
-                                                 outputs, inputs, batches)
+        multi_task_loss, multi_task_error = run_eval(sess, model, inputs_placeholder, outputs_placeholder,
+                                                     max_seq_len_placeholder, data_generator, args, target_point, labels,
+                                                     outputs, inputs, batches)
 
     # curriculum point
+    print(f'Current curriculum point: {curriculum_point}')
     if curriculum_point is not None:
         batches = data_generator.generate_batches(
             int(int(args.eval_batch_size / 4) / args.batch_size),
