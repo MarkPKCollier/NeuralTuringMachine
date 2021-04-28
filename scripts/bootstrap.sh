@@ -14,6 +14,7 @@ set -x
 # Preparing fresh machine for the first usage:
 
 sudo apt-get --yes update
+sudo update-pciids
 sudo apt-get --yes upgrade
 sudo apt-get --yes install software-properties-common
 sudo add-apt-repository --yes ppa:deadsnakes/ppa

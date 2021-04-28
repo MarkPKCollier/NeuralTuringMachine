@@ -22,13 +22,12 @@ def expand(x, dim, N):
 
 
 def learned_init(units):
-    return tf.squeeze(tf.contrib.layers.fully_connected(tf.ones([1, 1]), units,
-        activation_fn=None, biases_initializer=None))
+    return tf.squeeze(tf.compat.v1.layers.dense(tf.ones([1, 1]), units))
 
 
 def create_linear_initializer(input_size, dtype=tf.float32):
     stddev = 1.0 / np.sqrt(input_size)
-    return tf.truncated_normal_initializer(stddev=stddev, dtype=dtype)
+    return tf.compat.v1.truncated_normal_initializer(stddev=stddev, dtype=dtype)
 
 
 def save_session_as_tf_checkpoint(session, saver, current_stage, bits_per_number):

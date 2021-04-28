@@ -1,3 +1,4 @@
+import sys
 import argparse
 import subprocess
 from pathlib import Path
@@ -26,20 +27,24 @@ def freeze_graph(directory_path):
 
     output_node_names = ['root/Sigmoid']  # Output nodes
 
-    with tf.Session() as sess:
-        # Restore the graph
-        saver = tf.train.import_meta_graph(str(meta_path))
+    tf.compat.v1.disable_v2_behavior()
 
-        # Load weights
-        latest_checkpoint_path = tf.train.latest_checkpoint(str(root_path))
-        print(f'Tensorflow reading {latest_checkpoint_path} before freezing')
-        saver.restore(sess, latest_checkpoint_path)
+    device_name = "/cpu:0"
+    with tf.device(device_name):
+        with tf.compat.v1.Session() as sess:
+            # Restore the graph
+            saver = tf.compat.v1.train.import_meta_graph(str(meta_path), clear_devices=True)
 
-        # Freeze the graph
-        frozen_graph_def = tf.graph_util.convert_variables_to_constants(
-            sess,
-            sess.graph_def,
-            output_node_names)
+            # Load weights
+            latest_checkpoint_path = tf.compat.v1.train.latest_checkpoint(str(root_path))
+            print(f'Tensorflow reading {latest_checkpoint_path} before freezing')
+            saver.restore(sess, latest_checkpoint_path)
+
+            # Freeze the graph
+            frozen_graph_def = tf.compat.v1.graph_util.convert_variables_to_constants(
+                sess,
+                sess.graph_def,
+                output_node_names)
 
         # Save the frozen graph
         with open(frozen_path, 'wb') as f:
@@ -47,13 +52,16 @@ def freeze_graph(directory_path):
 
 
 def run_console_tool(tool_arguments):
-    python_executable = Path.cwd() / 'venv' / 'bin' / 'python'  # 'python3'
+    python_executable = Path.cwd() / 'venv' / 'bin' / 'python'
     options = [
         str(python_executable), __file__,
         *tool_arguments
     ]
     print('[SUBPROCESS] {}'.format(' '.join(options)))
-    return subprocess.run(options, capture_output=True)
+    if sys.version_info.major <= 6:
+        return subprocess.run(options)
+    else:
+        return subprocess.run(options, capture_output=True)
 
 
 if __name__ == '__main__':

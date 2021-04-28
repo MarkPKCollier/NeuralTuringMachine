@@ -126,9 +126,9 @@ class BuildModel(object):
                 )
             else:
                 def single_cell(num_units):
-                    return tf.contrib.rnn.BasicLSTMCell(num_units, forget_bias=1.0)
+                    return tf.compat.v1.nn.rnn_cell.BasicLSTMCell(num_units, forget_bias=1.0)
 
-                controller = tf.contrib.rnn.MultiRNNCell(
+                controller = tf.compat.v1.nn.rnn_cell.MultiRNNCell(
                     [single_cell(args.num_units) for _ in range(args.num_layers)])
 
                 cell = NTMCell(controller, args.num_memory_locations, args.memory_size,
@@ -136,7 +136,7 @@ class BuildModel(object):
                                output_dim=args.num_bits_per_vector,
                                clip_value=args.clip_value)
 
-        output_sequence, _ = tf.nn.dynamic_rnn(
+        output_sequence, _ = tf.compat.v1.nn.dynamic_rnn(
             cell=cell,
             inputs=self.inputs,
             time_major=False,
@@ -182,9 +182,9 @@ class BuildTModel(BuildModel):
         if args.optimizer == 'RMSProp':
             optimizer = tf.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
         elif args.optimizer == 'Adam':
-            optimizer = tf.train.AdamOptimizer(learning_rate=args.learning_rate)
+            optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=args.learning_rate)
 
-        trainable_variables = tf.trainable_variables()
+        trainable_variables = tf.compat.v1.trainable_variables()
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, trainable_variables), args.max_grad_norm)
         self.train_op = optimizer.apply_gradients(zip(grads, trainable_variables))
 
@@ -209,6 +209,7 @@ if __name__ == '__main__':
         constants.HEAD_LOG_FILE = 'head_logs/{0}.p'.format(args.experiment_name)
         constants.GENERALIZATION_HEAD_LOG_FILE = 'head_logs/generalization_{0}.p'.format(args.experiment_name)
 
+    tf.compat.v1.disable_v2_behavior()
     if args.device == "gpu":
         device_name = "/gpu:0"
     else:
@@ -216,11 +217,29 @@ if __name__ == '__main__':
     with tf.device(device_name):
         with tf.compat.v1.variable_scope('root'):
             max_seq_len_placeholder = tf.compat.v1.placeholder(tf.int32)
-            inputs_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector + 1))
-            outputs_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
+            inputs_placeholder = tf.compat.v1.placeholder(tf.float32,
+                                                          shape=(args.batch_size, None, args.num_bits_per_vector + 1))
+            outputs_placeholder = tf.compat.v1.placeholder(tf.float32,
+                                                           shape=(args.batch_size, None, args.num_bits_per_vector))
+            model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
+            initializer = tf.compat.v1.global_variables_initializer()
+    if args.device == "gpu":
+        device_name = "/gpu:0"
+    else:
+        device_name = "/cpu:0"
+    with tf.device(device_name):
+        with tf.compat.v1.variable_scope('root'):
+            max_seq_len_placeholder = tf.compat.v1.placeholder(tf.int32)
+            inputs_placeholder = tf.compat.v1.placeholder(tf.float32,
+                                                          shape=(args.batch_size, None, args.num_bits_per_vector + 1))
+            outputs_placeholder = tf.compat.v1.placeholder(tf.float32,
+                                                           shape=(args.batch_size, None, args.num_bits_per_vector))
             model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
             initializer = tf.global_variables_initializer()
 
+    saver = tf.compat.v1.train.Saver(max_to_keep=10)
+    tf.debugging.set_log_device_placement(True)
+    sess = tf.compat.v1.Session()
     saver = tf.train.Saver(max_to_keep=10)
     sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
     if not args.continue_training_from_checkpoint:
@@ -231,7 +250,7 @@ if __name__ == '__main__':
         print(f'Tensorflow reading {latest_checkpoint_path} checkpoint')
         saver.restore(sess, latest_checkpoint_path)
         print(f'Tensorflow loaded {latest_checkpoint_path} checkpoint')
-    tf.get_default_graph().finalize()
+    tf.compat.v1.get_default_graph().finalize()
 
     # training
     convergence_on_target_task = None
