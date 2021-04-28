@@ -1,6 +1,7 @@
 import pickle
 
 import constants
+from tasks.arithmetics.binary_average_sum.task import AverageSumTask
 
 
 def run_eval(sess, model, inputs_placeholder, outputs_placeholder, max_seq_len_placeholder, data_generator, args,
@@ -47,10 +48,9 @@ def run_eval(sess, model, inputs_placeholder, outputs_placeholder, max_seq_len_p
 def eval_performance(sess, data_generator, args, model, target_point, labels, outputs, inputs, inputs_placeholder,
                      outputs_placeholder, max_seq_len_placeholder, curriculum_point, store_heat_maps=False,
                      skip_multi_task=False):
-    # target task
-    batches = data_generator.generate_batches(
-        int(int(args.eval_batch_size / 2) / args.batch_size),
-        args.batch_size,
+    generator_args = dict(
+        num_batches=int(int(args.eval_batch_size / 2) / args.batch_size),
+        batch_size=args.batch_size,
         bits_per_vector=args.num_bits_per_vector,
         curriculum_point=None,
         max_seq_len=args.max_seq_len,
@@ -58,6 +58,12 @@ def eval_performance(sess, data_generator, args, model, target_point, labels, ou
         pad_to_max_seq_len=args.pad_to_max_seq_len
     )
 
+    if args.task == AverageSumTask.name:
+        generator_args['numbers_quantity'] = args.num_experts
+
+    batches = data_generator.generate_batches(**generator_args)
+
+    # target task
     target_task_loss, target_task_error = run_eval(sess, model,
                                                    inputs_placeholder,
                                                    outputs_placeholder,

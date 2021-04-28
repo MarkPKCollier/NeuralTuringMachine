@@ -6,7 +6,11 @@ import sys
 import tensorflow as tf
 
 from freeze import analyze_inputs_outputs
-from generate_data import CopyTaskData, AssociativeRecallData, SumTaskData
+from generate_data import CopyTaskData, AssociativeRecallData
+from tasks.arithmetics.binary_average_sum.generator import AverageSumTaskData
+from tasks.arithmetics.binary_average_sum.task import AverageSumTask
+from tasks.arithmetics.binary_sum.generator import SumTaskData
+from tasks.arithmetics.binary_sum.task import SumTask
 from utils import expand, learned_init, save_session_as_tf_checkpoint, str2bool, logger
 from exp3S import Exp3S
 from evaluate import run_eval, eval_performance, eval_generalization
@@ -38,7 +42,7 @@ def create_argparser():
     parser.add_argument('--pad_to_max_seq_len', type=str2bool, default=False)
 
     parser.add_argument('--task', type=str, default='copy', help='copy | associative_recall',
-                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name))
+                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name))
     parser.add_argument('--num_bits_per_vector', type=int, default=8)
     parser.add_argument('--max_seq_len', type=int, default=20)
 
@@ -53,12 +57,23 @@ def create_argparser():
                         help='Optional. Specifies path to the directory with checkpoint')
     parser.add_argument('--continue_training_from_train_step', type=int, default=0,
                         help='Optional. Specifies train step from which we need to continue training')
+
+    parser.add_argument('--num_experts', type=int, required=False,
+                        help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
+
+    parser.add_argument('--device', type=str, required=False, choices=('cpu', 'gpu'), default='cpu',
+                        help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
+
     return parser
+
+
+class UnknownTaskError(Exception):
+    pass
 
 
 class CopyTask:
     name = 'copy'
-    
+
     @staticmethod
     def offset(max_len_placeholder):
         return max_len_placeholder + 1
@@ -66,30 +81,10 @@ class CopyTask:
 
 class AssociativeRecallTask:
     name = 'associative_recall'
-    
+
     @staticmethod
     def offset(max_len_placeholder):
         return 3 * (max_len_placeholder + 1) + 2
-
-
-class SumTask:
-    name = 'sum'
-
-    @staticmethod
-    def offset(max_len_placeholder):
-        """
-        Gives offset from which label, or answer, is given in the input
-
-        In particular, we have
-        <first number, e.g. [1 0 0 0]>
-        <operation marker, e.g. 1>
-        <second number, e.g [0 1 0 0]>
-        <end marker, e.g. 0>
-
-        :param max_len_placeholder: number of bits required for a single number representation
-        :return: required shift
-        """
-        return 2 * (max_len_placeholder + 1)
 
 
 class BuildModel(object):
@@ -149,33 +144,40 @@ class BuildModel(object):
             initial_state=initial_state if args.mann == 'none' else None)
 
         task_to_offset = {
-            CopyTask.name: CopyTask.offset,
-            AssociativeRecallTask.name: AssociativeRecallTask.offset,
-            SumTask.name: SumTask.offset
+            CopyTask.name: lambda: CopyTask.offset(self.max_seq_len),
+            AssociativeRecallTask.name: lambda: AssociativeRecallTask.offset(self.max_seq_len),
+            SumTask.name: lambda: SumTask.offset(self.max_seq_len),
+            AverageSumTask.name: lambda: AverageSumTask.offset(self.max_seq_len, args.num_experts)
         }
         try:
-            self.output_logits = output_sequence[:, task_to_offset[args.task](self.max_seq_len):, :]
+            where_output_begins = task_to_offset[args.task]()
+            self.output_logits = output_sequence[:, where_output_begins:, :]
         except KeyError:
-            sys.exit(f'No information on output slicing of model for "{args.task}" task')
+            raise UnknownTaskError(f'No information on output slicing of model for "{args.task}" task')
 
+        # Intentionally put in a map, so that each new task that is added to the library explicitly fails with
+        # the message. Otherwise, code fails during the training process with a strange error
         task_to_activation = {
             CopyTask.name: tf.sigmoid,
             AssociativeRecallTask.name: tf.sigmoid,
             SumTask.name: tf.sigmoid,
+            AverageSumTask.name: tf.sigmoid,
         }
         try:
             self.outputs = task_to_activation[args.task](self.output_logits)
         except KeyError:
-            sys.exit(f'No information on activation on model outputs for "{args.task}" task')
+            raise UnknownTaskError(f'No information on activation on model outputs for "{args.task}" task')
 
 
 class BuildTModel(BuildModel):
     def __init__(self, max_seq_len, inputs, outputs):
         super(BuildTModel, self).__init__(max_seq_len, inputs)
 
-        if args.task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name):
+        if is_current_task_supported(args.task):
             cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=outputs, logits=self.output_logits)
             self.loss = tf.reduce_sum(cross_entropy) / args.batch_size
+        else:
+            raise UnknownTaskError(f'No information how to calculate loss for {args.task} task')
 
         if args.optimizer == 'RMSProp':
             optimizer = tf.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
@@ -187,6 +189,10 @@ class BuildTModel(BuildModel):
         self.train_op = optimizer.apply_gradients(zip(grads, trainable_variables))
 
 
+def is_current_task_supported(task):
+    return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name)
+
+
 if __name__ == '__main__':
     args = create_argparser().parse_args()
 
@@ -196,7 +202,6 @@ if __name__ == '__main__':
             from ntm import NTMCell
         else:
             print('Using contrib implementation')
-            import tensorflow.contrib.rnn.python.ops.rnn_cell as tf_nn
             from tensorflow.contrib.rnn.python.ops.rnn_cell import NTMCell
 
     if args.verbose:
@@ -204,15 +209,20 @@ if __name__ == '__main__':
         constants.HEAD_LOG_FILE = 'head_logs/{0}.p'.format(args.experiment_name)
         constants.GENERALIZATION_HEAD_LOG_FILE = 'head_logs/generalization_{0}.p'.format(args.experiment_name)
 
-    with tf.variable_scope('root'):
-        max_seq_len_placeholder = tf.placeholder(tf.int32)
-        inputs_placeholder = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector + 1))
-        outputs_placeholder = tf.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
-        model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
-        initializer = tf.global_variables_initializer()
+    if args.device == "gpu":
+        device_name = "/gpu:0"
+    else:
+        device_name = "/cpu:0"
+    with tf.device(device_name):
+        with tf.compat.v1.variable_scope('root'):
+            max_seq_len_placeholder = tf.compat.v1.placeholder(tf.int32)
+            inputs_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector + 1))
+            outputs_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(args.batch_size, None, args.num_bits_per_vector))
+            model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
+            initializer = tf.global_variables_initializer()
 
     saver = tf.train.Saver(max_to_keep=10)
-    sess = tf.Session()
+    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
     if not args.continue_training_from_checkpoint:
         print(f'Tensorflow initializing the model')
         sess.run(initializer)
@@ -265,6 +275,15 @@ if __name__ == '__main__':
         curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
         progress_error = 1.0
         convergence_error = 0.1
+    elif args.task == AverageSumTask.name:
+        data_generator = AverageSumTaskData()
+        target_point = args.max_seq_len
+        # TODO: investigate what curriculum point is
+        curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
+        progress_error = 1.0
+        convergence_error = 0.1
+    else:
+        raise UnknownTaskError(f'No information on the way to generate data for {args.task} task')
 
     if data_generator is None:
         sys.exit(f'Data generation rules for "{args.task}" are not specified')
@@ -273,14 +292,17 @@ if __name__ == '__main__':
         pickle.dump({target_point: []}, open(constants.HEAD_LOG_FILE, "wb"))
         pickle.dump({}, open(constants.GENERALIZATION_HEAD_LOG_FILE, "wb"))
 
-    for i in range(args.continue_training_from_train_step+1, args.num_train_steps):
+    for i in range(args.continue_training_from_train_step + 1, args.num_train_steps):
         if args.curriculum == 'prediction_gain':
             if args.task == CopyTask.name:
                 task = 1 + exp3s.draw_task()
             elif args.task == AssociativeRecallTask.name:
                 task = 2 + exp3s.draw_task()
 
-        seq_len, inputs, labels = data_generator.generate_batches(
+        if not is_current_task_supported(args.task):
+            raise UnknownTaskError(f'No information on how to properly initiate data generation for {args.task} task')
+
+        generator_args = dict(
             num_batches=1,
             batch_size=args.batch_size,
             bits_per_vector=args.num_bits_per_vector,
@@ -288,7 +310,12 @@ if __name__ == '__main__':
             max_seq_len=args.max_seq_len,
             curriculum=args.curriculum,
             pad_to_max_seq_len=args.pad_to_max_seq_len
-        )[0]
+        )
+
+        if args.task == AverageSumTask.name:
+            generator_args['numbers_quantity'] = args.num_experts
+
+        seq_len, inputs, labels = data_generator.generate_batches(**generator_args)[0]
 
         train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
                                           feed_dict={
@@ -312,13 +339,15 @@ if __name__ == '__main__':
             logger.info('TRAIN_PARSABLE: {0},{1},{2},{3}'.format(i, curriculum_point, train_loss, avg_errors_per_seq))
 
         if i % args.steps_per_eval == 0:
+            should_skip_multi_task = args.task in (SumTask.name, AverageSumTask.name)
+
             target_task_error, target_task_loss, multi_task_error, multi_task_loss, curriculum_point_error, \
             curriculum_point_loss = eval_performance(sess, data_generator, args, model,
                                                      target_point, labels, outputs, inputs,
                                                      inputs_placeholder, outputs_placeholder, max_seq_len_placeholder,
                                                      curriculum_point if args.curriculum != 'prediction_gain' else None,
                                                      store_heat_maps=args.verbose,
-                                                     skip_multi_task=args.task == SumTask.name)
+                                                     skip_multi_task=should_skip_multi_task)
 
             if (convergence_on_multi_task is None and
                     multi_task_error is not None and  # condition inserted due to SumTask

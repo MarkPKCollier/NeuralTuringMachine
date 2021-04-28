@@ -110,3 +110,4 @@ ENV/
 
 # training artifacts
 models
+artifacts
