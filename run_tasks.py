@@ -11,6 +11,10 @@ from tasks.arithmetics.binary_average_sum.generator import AverageSumTaskData
 from tasks.arithmetics.binary_average_sum.task import AverageSumTask
 from tasks.arithmetics.binary_sum.generator import SumTaskData
 from tasks.arithmetics.binary_sum.task import SumTask
+from tasks.associative_recall.task import AssociativeRecallTask
+from tasks.common.errors import UnknownTaskError
+from tasks.copy.task import CopyTask
+from tasks.operators.mta.task import MTATask
 from utils import expand, learned_init, save_session_as_tf_checkpoint, str2bool, logger
 from exp3S import Exp3S
 from evaluate import run_eval, eval_performance, eval_generalization
@@ -42,7 +46,8 @@ def create_argparser():
     parser.add_argument('--pad_to_max_seq_len', type=str2bool, default=False)
 
     parser.add_argument('--task', type=str, default='copy', help='copy | associative_recall',
-                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name))
+                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name,
+                                 MTATask.name))
     parser.add_argument('--num_bits_per_vector', type=int, default=8)
     parser.add_argument('--max_seq_len', type=int, default=20)
 
@@ -65,26 +70,6 @@ def create_argparser():
                         help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
 
     return parser
-
-
-class UnknownTaskError(Exception):
-    pass
-
-
-class CopyTask:
-    name = 'copy'
-
-    @staticmethod
-    def offset(max_len_placeholder):
-        return max_len_placeholder + 1
-
-
-class AssociativeRecallTask:
-    name = 'associative_recall'
-
-    @staticmethod
-    def offset(max_len_placeholder):
-        return 3 * (max_len_placeholder + 1) + 2
 
 
 class BuildModel(object):
