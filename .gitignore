@@ -101,3 +101,13 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# PyCharm
+.idea
+
+# macOS
+.DS_Store
+
+# training artifacts
+models
+artifacts
