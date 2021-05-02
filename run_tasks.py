@@ -67,7 +67,17 @@ def create_argparser():
                         help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
 
     parser.add_argument('--device', type=str, required=False, choices=('cpu', 'gpu'), default='cpu',
-                        help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
+                        help='Optional. Specifies target device for training process. Note that inference happens'
+                             'on CPU device anyway')
+
+    parser.add_argument('--two_tuple_weight_precision', type=int, required=False, default=1,
+                        help='Optional. Specifies number of digits after the floating point to keep in 2-tuple weights')
+
+    parser.add_argument('--two_tuple_alpha_precision', type=int, required=False, default=1,
+                        help='Optional. Specifies number of digits after the floating point to keep in 2-tuple alpha')
+
+    parser.add_argument('--two_tuple_largest_scale_size', type=int, required=False, default=5,
+                        help='Optional. Specifies size of the largest liguistic scale used to encode 2-tuple')
 
     return parser
 
@@ -165,7 +175,7 @@ class BuildTModel(BuildModel):
             raise UnknownTaskError(f'No information how to calculate loss for {args.task} task')
 
         if args.optimizer == 'RMSProp':
-            optimizer = tf.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
+            optimizer = tf.compat.v1.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
         elif args.optimizer == 'Adam':
             optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=args.learning_rate)
 
