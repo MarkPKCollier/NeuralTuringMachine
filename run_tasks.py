@@ -229,8 +229,10 @@ if __name__ == '__main__':
             model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
             initializer = tf.compat.v1.global_variables_initializer()
 
+    if args.verbose:
+        tf.debugging.set_log_device_placement(True)
+
     saver = tf.compat.v1.train.Saver(max_to_keep=10)
-    tf.debugging.set_log_device_placement(True)
     sess = tf.compat.v1.Session()
     if not args.continue_training_from_checkpoint:
         print(f'Tensorflow initializing the model')

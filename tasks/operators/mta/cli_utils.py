@@ -18,7 +18,7 @@ def run_console_tool(tool_path: Path, *args, **kwargs):
         *kwargs_processed
     ]
 
-    print('[SUBPROCESS] {}'.format(' '.join(options)))
+    # print('[SUBPROCESS] {}'.format(' '.join(options)))
     if sys.version_info.minor <= 6:
         return subprocess.run(options)
     else:
