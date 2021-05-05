@@ -23,4 +23,7 @@ sudo apt-get --yes install python3-pip
 python3.7 -m pip install virtualenv
 python3.7 -m virtualenv venv
 source venv/bin/activate
+
+git submodule update --init --recursive
 python -m pip install -r requirements.txt
+python -m pip install -r tasks/operators/tpr_toolkit/requirements.txt
