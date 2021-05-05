@@ -14,6 +14,7 @@ from tasks.arithmetics.binary_sum.task import SumTask
 from tasks.associative_recall.task import AssociativeRecallTask
 from tasks.common.errors import UnknownTaskError
 from tasks.copy.task import CopyTask
+from tasks.operators.mta.generator import MTATaskData
 from tasks.operators.mta.task import MTATask
 from utils import expand, learned_init, save_session_as_tf_checkpoint, str2bool, logger
 from exp3S import Exp3S
@@ -142,7 +143,11 @@ class BuildModel(object):
             CopyTask.name: lambda: CopyTask.offset(self.max_seq_len),
             AssociativeRecallTask.name: lambda: AssociativeRecallTask.offset(self.max_seq_len),
             SumTask.name: lambda: SumTask.offset(self.max_seq_len),
-            AverageSumTask.name: lambda: AverageSumTask.offset(self.max_seq_len, args.num_experts)
+            AverageSumTask.name: lambda: AverageSumTask.offset(self.max_seq_len, args.num_experts),
+            MTATask.name: lambda: MTATask.offset(self.max_seq_len,
+                                                 args.num_experts,
+                                                 args.two_tuple_weight_precision,
+                                                 args.two_tuple_alpha_precision)
         }
         try:
             where_output_begins = task_to_offset[args.task]()
@@ -157,6 +162,7 @@ class BuildModel(object):
             AssociativeRecallTask.name: tf.sigmoid,
             SumTask.name: tf.sigmoid,
             AverageSumTask.name: tf.sigmoid,
+            MTATask.name: tf.sigmoid,
         }
         try:
             self.outputs = task_to_activation[args.task](self.output_logits)
@@ -185,7 +191,7 @@ class BuildTModel(BuildModel):
 
 
 def is_current_task_supported(task):
-    return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name)
+    return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name, MTATask.name)
 
 
 if __name__ == '__main__':
@@ -218,25 +224,10 @@ if __name__ == '__main__':
                                                            shape=(args.batch_size, None, args.num_bits_per_vector))
             model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
             initializer = tf.compat.v1.global_variables_initializer()
-    if args.device == "gpu":
-        device_name = "/gpu:0"
-    else:
-        device_name = "/cpu:0"
-    with tf.device(device_name):
-        with tf.compat.v1.variable_scope('root'):
-            max_seq_len_placeholder = tf.compat.v1.placeholder(tf.int32)
-            inputs_placeholder = tf.compat.v1.placeholder(tf.float32,
-                                                          shape=(args.batch_size, None, args.num_bits_per_vector + 1))
-            outputs_placeholder = tf.compat.v1.placeholder(tf.float32,
-                                                           shape=(args.batch_size, None, args.num_bits_per_vector))
-            model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
-            initializer = tf.global_variables_initializer()
 
     saver = tf.compat.v1.train.Saver(max_to_keep=10)
     tf.debugging.set_log_device_placement(True)
     sess = tf.compat.v1.Session()
-    saver = tf.train.Saver(max_to_keep=10)
-    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
     if not args.continue_training_from_checkpoint:
         print(f'Tensorflow initializing the model')
         sess.run(initializer)
@@ -245,7 +236,6 @@ if __name__ == '__main__':
         print(f'Tensorflow reading {latest_checkpoint_path} checkpoint')
         saver.restore(sess, latest_checkpoint_path)
         print(f'Tensorflow loaded {latest_checkpoint_path} checkpoint')
-    tf.compat.v1.get_default_graph().finalize()
 
     # training
     convergence_on_target_task = None
@@ -296,6 +286,13 @@ if __name__ == '__main__':
         curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
         progress_error = 1.0
         convergence_error = 0.1
+    elif args.task == MTATask.name:
+        data_generator = MTATaskData()
+        target_point = args.max_seq_len
+        # TODO: investigate what curriculum point is
+        curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
+        progress_error = 1.0
+        convergence_error = 0.1
     else:
         raise UnknownTaskError(f'No information on the way to generate data for {args.task} task')
 
@@ -329,14 +326,22 @@ if __name__ == '__main__':
         if args.task == AverageSumTask.name:
             generator_args['numbers_quantity'] = args.num_experts
 
+        if args.task == MTATask.name:
+            generator_args['numbers_quantity'] = args.num_experts
+            generator_args['two_tuple_weight_precision'] = args.two_tuple_weight_precision
+            generator_args['two_tuple_alpha_precision'] = args.two_tuple_alpha_precision
+            generator_args['two_tuple_largest_scale_size'] = args.two_tuple_largest_scale_size
+
         seq_len, inputs, labels = data_generator.generate_batches(**generator_args)[0]
 
-        train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
-                                          feed_dict={
-                                              inputs_placeholder: inputs,
-                                              outputs_placeholder: labels,
-                                              max_seq_len_placeholder: seq_len
-                                          })
+        with sess:
+            tf.compat.v1.get_default_graph().finalize()
+            train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
+                                              feed_dict={
+                                                  inputs_placeholder: inputs,
+                                                  outputs_placeholder: labels,
+                                                  max_seq_len_placeholder: seq_len
+                                              })
 
         if args.curriculum == 'prediction_gain':
             loss, _ = run_eval(sess, model, inputs_placeholder, outputs_placeholder, max_seq_len_placeholder,

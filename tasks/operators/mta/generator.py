@@ -25,6 +25,14 @@ def new_empty_placeholder(numbers_quantity, batch_size, bits_per_number, bits_pe
         ), dtype=np.float32)
 
 
+def single_tpr_len(two_tuple_largest_scale_size) -> int:
+    first_tuple = tpr.model_2_tuple.Model2Tuple(term_index=0, alpha=0,
+                                                linguistic_scale_size=two_tuple_largest_scale_size)
+    encoded_tuple, encoder = tpr.model_2_tuple.encode_model_2_tuple(first_tuple)
+    flattened_encoded_tuple = tpr.flattenize_per_tensor_representation(encoded_tuple)
+    return len(flattened_encoded_tuple)
+
+
 def log_generated_mta_samples(samples: List[np.ndarray], results, bits_per_number, numbers_quantity,
                               linguistic_scale_size, is_verbose=True, full_check=False, encoder=None, decoder=None):
     if full_check:
@@ -53,13 +61,20 @@ class MTATaskData(BinaryVectorErrorEstimator):
     def generate_batches(self, num_batches, batch_size, bits_per_vector=3, curriculum_point=20, max_seq_len=4,
                          curriculum='uniform', pad_to_max_seq_len=False, numbers_quantity=3,
                          two_tuple_weight_precision=1, two_tuple_alpha_precision=1, two_tuple_largest_scale_size=5):
+        return self._generate_batches(num_batches, batch_size, bits_per_vector, curriculum, numbers_quantity,
+                                      two_tuple_weight_precision, two_tuple_alpha_precision,
+                                      two_tuple_largest_scale_size)
+
+    def _generate_batches(self, num_batches, batch_size, bits_per_vector, curriculum, numbers_quantity,
+                          two_tuple_weight_precision, two_tuple_alpha_precision, two_tuple_largest_scale_size):
+        # 0. obtaining encoder and decoder networks for further re-use
         first_tuple = tpr.model_2_tuple.Model2Tuple(term_index=0, alpha=0,
                                                     linguistic_scale_size=two_tuple_largest_scale_size)
         encoded_tuple, encoder = tpr.model_2_tuple.encode_model_2_tuple(first_tuple)
         flattened_encoded_tuple = tpr.flattenize_per_tensor_representation(encoded_tuple)
         decoded_tuple, decoder = tpr.model_2_tuple.decode_model_2_tuple_tpr(flattened_encoded_tuple)
 
-        bits_per_number = len(flattened_encoded_tuple)
+        bits_per_number = single_tpr_len(two_tuple_largest_scale_size)
 
         batches = []
         for i in range(num_batches):
@@ -72,21 +87,21 @@ class MTATaskData(BinaryVectorErrorEstimator):
 
             bits_per_vector_for_outputs = bits_per_vector
 
-            inputs, outputs = self._generate_batches(numbers_quantity,
-                                                     batch_size,
-                                                     bits_per_number,
-                                                     bits_per_vector_for_inputs,
-                                                     bits_per_vector_for_outputs,
-                                                     two_tuple_weight_precision,
-                                                     two_tuple_alpha_precision,
-                                                     two_tuple_largest_scale_size,
-                                                     encoder=encoder,
-                                                     decoder=decoder)
+            inputs, outputs = self._generate_batch(numbers_quantity,
+                                                   batch_size,
+                                                   bits_per_number,
+                                                   bits_per_vector_for_inputs,
+                                                   bits_per_vector_for_outputs,
+                                                   two_tuple_weight_precision,
+                                                   two_tuple_alpha_precision,
+                                                   two_tuple_largest_scale_size,
+                                                   encoder=encoder,
+                                                   decoder=decoder)
 
             # TODO: should it be a full row of ones as it is in other tasks? Or as in
             # TODO: binary arithmetic paper - just a flag?
             eos = np.ones([batch_size, 1, bits_per_vector_for_inputs])
-            output_inputs = np.zeros((batch_size, bits_per_number + 1, bits_per_vector_for_inputs))
+            output_inputs = np.zeros((batch_size, bits_per_number, bits_per_vector_for_inputs))
 
             full_inputs = np.concatenate((inputs[:, :-1, :], eos, output_inputs), axis=1)
 
@@ -99,10 +114,10 @@ class MTATaskData(BinaryVectorErrorEstimator):
             )
         return batches
 
-    def _generate_batches(self, numbers_quantity, batch_size, bits_per_number, bits_per_vector_for_inputs,
-                          bits_per_vector_for_outputs, two_tuple_weight_precision,
-                          two_tuple_alpha_precision,
-                          two_tuple_largest_scale_size, encoder=None, decoder=None):
+    def _generate_batch(self, numbers_quantity, batch_size, bits_per_number, bits_per_vector_for_inputs,
+                        bits_per_vector_for_outputs, two_tuple_weight_precision,
+                        two_tuple_alpha_precision,
+                        two_tuple_largest_scale_size, encoder=None, decoder=None):
         batch_tuples = []
         batch_result_tuples = []
         for batch_index in range(batch_size):
@@ -148,7 +163,7 @@ class MTATaskData(BinaryVectorErrorEstimator):
             example_output[sample_index, :, 0] = batch_result_tuples[sample_index]
 
         log_generated_mta_samples(example_input, example_output, bits_per_number, numbers_quantity,
-                                  two_tuple_largest_scale_size, is_verbose=True,encoder=encoder, decoder=decoder)
+                                  two_tuple_largest_scale_size, is_verbose=True, encoder=encoder, decoder=decoder)
         return example_input, example_output
 
 
@@ -161,5 +176,5 @@ if __name__ == '__main__':
                                       two_tuple_weight_precision=1,
                                       two_tuple_alpha_precision=1,
                                       two_tuple_largest_scale_size=5)
-    after = time.time()-before
+    after = time.time() - before
     print(f'Time elapsed: {after}')
