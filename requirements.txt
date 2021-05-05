@@ -2,3 +2,4 @@ matplotlib==3.3.4
 pandas==1.2.3
 scipy==1.5.3
 tensorflow==2.3.0
+typed-argument-parser==1.6.2

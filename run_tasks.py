@@ -194,6 +194,10 @@ def is_current_task_supported(task):
     return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name, MTATask.name)
 
 
+def is_multitask_not_supported(task):
+    return task in (SumTask.name, AverageSumTask.name, MTATask.name)
+
+
 if __name__ == '__main__':
     args = create_argparser().parse_args()
 
@@ -236,6 +240,7 @@ if __name__ == '__main__':
         print(f'Tensorflow reading {latest_checkpoint_path} checkpoint')
         saver.restore(sess, latest_checkpoint_path)
         print(f'Tensorflow loaded {latest_checkpoint_path} checkpoint')
+    tf.compat.v1.get_default_graph().finalize()
 
     # training
     convergence_on_target_task = None
@@ -327,6 +332,7 @@ if __name__ == '__main__':
             generator_args['numbers_quantity'] = args.num_experts
 
         if args.task == MTATask.name:
+            generator_args['cli_mode'] = True
             generator_args['numbers_quantity'] = args.num_experts
             generator_args['two_tuple_weight_precision'] = args.two_tuple_weight_precision
             generator_args['two_tuple_alpha_precision'] = args.two_tuple_alpha_precision
@@ -334,14 +340,12 @@ if __name__ == '__main__':
 
         seq_len, inputs, labels = data_generator.generate_batches(**generator_args)[0]
 
-        with sess:
-            tf.compat.v1.get_default_graph().finalize()
-            train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
-                                              feed_dict={
-                                                  inputs_placeholder: inputs,
-                                                  outputs_placeholder: labels,
-                                                  max_seq_len_placeholder: seq_len
-                                              })
+        train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
+                                          feed_dict={
+                                              inputs_placeholder: inputs,
+                                              outputs_placeholder: labels,
+                                              max_seq_len_placeholder: seq_len
+                                          })
 
         if args.curriculum == 'prediction_gain':
             loss, _ = run_eval(sess, model, inputs_placeholder, outputs_placeholder, max_seq_len_placeholder,
@@ -358,7 +362,7 @@ if __name__ == '__main__':
             logger.info('TRAIN_PARSABLE: {0},{1},{2},{3}'.format(i, curriculum_point, train_loss, avg_errors_per_seq))
 
         if i % args.steps_per_eval == 0:
-            should_skip_multi_task = args.task in (SumTask.name, AverageSumTask.name)
+            should_skip_multi_task = is_multitask_not_supported(args.task)
 
             target_task_error, target_task_loss, multi_task_error, multi_task_loss, curriculum_point_error, \
             curriculum_point_loss = eval_performance(sess, data_generator, args, model,
