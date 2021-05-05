@@ -190,8 +190,8 @@ class MTATaskData(BinaryVectorErrorEstimator):
             kwargs['--mode'] = 'generate'
             cli_generator_path = Path(__file__).parent / 'generator_cli.py'
             res_output = run_console_tool(tool_path=cli_generator_path, **kwargs)
-            print(f'SUBPROCESS: {str(res_output.stdout.decode("utf-8"))}')
-            print(f'SUBPROCESS: {str(res_output.stderr.decode("utf-8"))}')
+            # print(f'SUBPROCESS: {str(res_output.stdout.decode("utf-8"))}')
+            # print(f'SUBPROCESS: {str(res_output.stderr.decode("utf-8"))}')
             return load_batches_from_file(batch_path)
 
         return generate_batches(**arguments)
