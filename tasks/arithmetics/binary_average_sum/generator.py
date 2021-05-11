@@ -2,7 +2,7 @@ import sys
 import numpy as np
 
 from tasks.arithmetics.common.binary_arithmetics import BinaryUtils
-from tasks.arithmetics.common.error_estimator import BinaryVectorErrorEstimator
+from tasks.common.error_estimator import BinaryVectorErrorEstimator
 
 
 def new_empty_placeholder(numbers_quantity, batch_size, bits_per_number, bits_per_vector):

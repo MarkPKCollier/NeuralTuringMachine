@@ -1,17 +1,11 @@
 import argparse
 import re
 
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-
-def get_img_folder_path():
-    project_root = Path(__file__).resolve().parent
-    tmp_artifacts_root = project_root / 'artifacts'
-    return tmp_artifacts_root
+from constants import TMP_ARTIFACTS_PATH
 
 
 def create_chart(ticks, granularity=1000, type='error', bits_per_number=4, series={}):
@@ -62,14 +56,12 @@ def create_chart(ticks, granularity=1000, type='error', bits_per_number=4, serie
 
 
 def save_chart(plot, type, bits_per_number):
-    project_root = Path(__file__).resolve().parent
-    tmp_artifacts_root = project_root / 'artifacts'
     try:
-        tmp_artifacts_root.mkdir()
+        TMP_ARTIFACTS_PATH.mkdir()
     except FileExistsError:
         pass
 
-    path_template = tmp_artifacts_root / f'{bits_per_number}_bit_{type}.eps'
+    path_template = TMP_ARTIFACTS_PATH / f'{bits_per_number}_bit_{type}.eps'
     plot.savefig(path_template, format='eps', dpi=600)
 
 

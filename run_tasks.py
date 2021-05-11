@@ -11,6 +11,11 @@ from tasks.arithmetics.binary_average_sum.generator import AverageSumTaskData
 from tasks.arithmetics.binary_average_sum.task import AverageSumTask
 from tasks.arithmetics.binary_sum.generator import SumTaskData
 from tasks.arithmetics.binary_sum.task import SumTask
+from tasks.associative_recall.task import AssociativeRecallTask
+from tasks.common.errors import UnknownTaskError
+from tasks.copy.task import CopyTask
+from tasks.operators.mta.generator import MTATaskData
+from tasks.operators.mta.task import MTATask
 from utils import expand, learned_init, save_session_as_tf_checkpoint, str2bool, logger
 from exp3S import Exp3S
 from evaluate import run_eval, eval_performance, eval_generalization
@@ -42,7 +47,8 @@ def create_argparser():
     parser.add_argument('--pad_to_max_seq_len', type=str2bool, default=False)
 
     parser.add_argument('--task', type=str, default='copy', help='copy | associative_recall',
-                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name))
+                        choices=(CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name,
+                                 MTATask.name))
     parser.add_argument('--num_bits_per_vector', type=int, default=8)
     parser.add_argument('--max_seq_len', type=int, default=20)
 
@@ -62,29 +68,19 @@ def create_argparser():
                         help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
 
     parser.add_argument('--device', type=str, required=False, choices=('cpu', 'gpu'), default='cpu',
-                        help='Optional. Specifies number of assessments (numbers) to aggregate: finding average')
+                        help='Optional. Specifies target device for training process. Note that inference happens'
+                             'on CPU device anyway')
+
+    parser.add_argument('--two_tuple_weight_precision', type=int, required=False, default=1,
+                        help='Optional. Specifies number of digits after the floating point to keep in 2-tuple weights')
+
+    parser.add_argument('--two_tuple_alpha_precision', type=int, required=False, default=1,
+                        help='Optional. Specifies number of digits after the floating point to keep in 2-tuple alpha')
+
+    parser.add_argument('--two_tuple_largest_scale_size', type=int, required=False, default=5,
+                        help='Optional. Specifies size of the largest liguistic scale used to encode 2-tuple')
 
     return parser
-
-
-class UnknownTaskError(Exception):
-    pass
-
-
-class CopyTask:
-    name = 'copy'
-
-    @staticmethod
-    def offset(max_len_placeholder):
-        return max_len_placeholder + 1
-
-
-class AssociativeRecallTask:
-    name = 'associative_recall'
-
-    @staticmethod
-    def offset(max_len_placeholder):
-        return 3 * (max_len_placeholder + 1) + 2
 
 
 class BuildModel(object):
@@ -147,7 +143,11 @@ class BuildModel(object):
             CopyTask.name: lambda: CopyTask.offset(self.max_seq_len),
             AssociativeRecallTask.name: lambda: AssociativeRecallTask.offset(self.max_seq_len),
             SumTask.name: lambda: SumTask.offset(self.max_seq_len),
-            AverageSumTask.name: lambda: AverageSumTask.offset(self.max_seq_len, args.num_experts)
+            AverageSumTask.name: lambda: AverageSumTask.offset(self.max_seq_len, args.num_experts),
+            MTATask.name: lambda: MTATask.offset(self.max_seq_len,
+                                                 args.num_experts,
+                                                 args.two_tuple_weight_precision,
+                                                 args.two_tuple_alpha_precision)
         }
         try:
             where_output_begins = task_to_offset[args.task]()
@@ -162,6 +162,7 @@ class BuildModel(object):
             AssociativeRecallTask.name: tf.sigmoid,
             SumTask.name: tf.sigmoid,
             AverageSumTask.name: tf.sigmoid,
+            MTATask.name: tf.sigmoid,
         }
         try:
             self.outputs = task_to_activation[args.task](self.output_logits)
@@ -180,7 +181,7 @@ class BuildTModel(BuildModel):
             raise UnknownTaskError(f'No information how to calculate loss for {args.task} task')
 
         if args.optimizer == 'RMSProp':
-            optimizer = tf.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
+            optimizer = tf.compat.v1.train.RMSPropOptimizer(args.learning_rate, momentum=0.9, decay=0.9)
         elif args.optimizer == 'Adam':
             optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=args.learning_rate)
 
@@ -190,7 +191,11 @@ class BuildTModel(BuildModel):
 
 
 def is_current_task_supported(task):
-    return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name)
+    return task in (CopyTask.name, AssociativeRecallTask.name, SumTask.name, AverageSumTask.name, MTATask.name)
+
+
+def is_multitask_not_supported(task):
+    return task in (SumTask.name, AverageSumTask.name, MTATask.name)
 
 
 if __name__ == '__main__':
@@ -223,25 +228,12 @@ if __name__ == '__main__':
                                                            shape=(args.batch_size, None, args.num_bits_per_vector))
             model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
             initializer = tf.compat.v1.global_variables_initializer()
-    if args.device == "gpu":
-        device_name = "/gpu:0"
-    else:
-        device_name = "/cpu:0"
-    with tf.device(device_name):
-        with tf.compat.v1.variable_scope('root'):
-            max_seq_len_placeholder = tf.compat.v1.placeholder(tf.int32)
-            inputs_placeholder = tf.compat.v1.placeholder(tf.float32,
-                                                          shape=(args.batch_size, None, args.num_bits_per_vector + 1))
-            outputs_placeholder = tf.compat.v1.placeholder(tf.float32,
-                                                           shape=(args.batch_size, None, args.num_bits_per_vector))
-            model = BuildTModel(max_seq_len_placeholder, inputs_placeholder, outputs_placeholder)
-            initializer = tf.global_variables_initializer()
+
+    if args.verbose:
+        tf.debugging.set_log_device_placement(True)
 
     saver = tf.compat.v1.train.Saver(max_to_keep=10)
-    tf.debugging.set_log_device_placement(True)
     sess = tf.compat.v1.Session()
-    saver = tf.train.Saver(max_to_keep=10)
-    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
     if not args.continue_training_from_checkpoint:
         print(f'Tensorflow initializing the model')
         sess.run(initializer)
@@ -301,6 +293,13 @@ if __name__ == '__main__':
         curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
         progress_error = 1.0
         convergence_error = 0.1
+    elif args.task == MTATask.name:
+        data_generator = MTATaskData()
+        target_point = args.max_seq_len
+        # TODO: investigate what curriculum point is
+        curriculum_point = None  # 1 if args.curriculum not in ('prediction_gain', 'none') else target_point
+        progress_error = 1.0
+        convergence_error = 0.1
     else:
         raise UnknownTaskError(f'No information on the way to generate data for {args.task} task')
 
@@ -334,6 +333,13 @@ if __name__ == '__main__':
         if args.task == AverageSumTask.name:
             generator_args['numbers_quantity'] = args.num_experts
 
+        if args.task == MTATask.name:
+            generator_args['cli_mode'] = True
+            generator_args['numbers_quantity'] = args.num_experts
+            generator_args['two_tuple_weight_precision'] = args.two_tuple_weight_precision
+            generator_args['two_tuple_alpha_precision'] = args.two_tuple_alpha_precision
+            generator_args['two_tuple_largest_scale_size'] = args.two_tuple_largest_scale_size
+
         seq_len, inputs, labels = data_generator.generate_batches(**generator_args)[0]
 
         train_loss, _, outputs = sess.run([model.loss, model.train_op, model.outputs],
@@ -358,7 +364,7 @@ if __name__ == '__main__':
             logger.info('TRAIN_PARSABLE: {0},{1},{2},{3}'.format(i, curriculum_point, train_loss, avg_errors_per_seq))
 
         if i % args.steps_per_eval == 0:
-            should_skip_multi_task = args.task in (SumTask.name, AverageSumTask.name)
+            should_skip_multi_task = is_multitask_not_supported(args.task)
 
             target_task_error, target_task_loss, multi_task_error, multi_task_loss, curriculum_point_error, \
             curriculum_point_loss = eval_performance(sess, data_generator, args, model,
