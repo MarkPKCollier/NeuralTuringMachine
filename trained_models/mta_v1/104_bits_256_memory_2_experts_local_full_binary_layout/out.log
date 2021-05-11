@@ -1,0 +1,1240 @@
++ mkdir models
+mkdir: cannot create directory ‘models’: File exists
++ free
+              total        used        free      shared  buff/cache   available
+Mem:       49451568      276452    46473376        5016     2701740    48610908
+Swap:             0           0           0
++ lscpu
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              24
+On-line CPU(s) list: 0-23
+Thread(s) per core:  1
+Core(s) per socket:  12
+Socket(s):           2
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               85
+Model name:          Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
+Stepping:            4
+CPU MHz:             2294.608
+BogoMIPS:            4589.21
+Virtualization:      VT-x
+Hypervisor vendor:   KVM
+Virtualization type: full
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            4096K
+L3 cache:            16384K
+NUMA node0 CPU(s):   0-23
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves arat pku ospke md_clear
++ lspci -nn
++ grep '\[03'
+00:02.0 VGA compatible controller [0300]: Cirrus Logic GD 5446 [1013:00b8]
++ python run_tasks.py --experiment_name experiment --verbose no --num_train_steps 1000000 --steps_per_eval 1000 --use_local_impl yes --curriculum none --device cpu --num_bits_per_vector 3 --num_memory_locations 256 --max_seq_len 4 --task mta --num_experts 2
+2021-05-05 19:23:06.612320: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+Using TensorFlow backend.
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:From /root/NeuralTuringMachine/ntm.py:29: BasicLSTMCell.__init__ (from tensorflow.python.keras.layers.legacy_rnn.rnn_cell_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+This class is equivalent as tf.keras.layers.LSTMCell, and will be replaced by that in Tensorflow 2.0.
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/ntm.py:29: BasicLSTMCell.__init__ (from tensorflow.python.keras.layers.legacy_rnn.rnn_cell_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+This class is equivalent as tf.keras.layers.LSTMCell, and will be replaced by that in Tensorflow 2.0.
+WARNING:tensorflow:From /root/NeuralTuringMachine/ntm.py:31: MultiRNNCell.__init__ (from tensorflow.python.keras.layers.legacy_rnn.rnn_cell_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+This class is equivalent as tf.keras.layers.StackedRNNCells, and will be replaced by that in Tensorflow 2.0.
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/ntm.py:31: MultiRNNCell.__init__ (from tensorflow.python.keras.layers.legacy_rnn.rnn_cell_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+This class is equivalent as tf.keras.layers.StackedRNNCells, and will be replaced by that in Tensorflow 2.0.
+WARNING:tensorflow:From /root/NeuralTuringMachine/utils.py:30: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/utils.py:30: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From run_tasks.py:140: dynamic_rnn (from tensorflow.python.ops.rnn) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `keras.layers.RNN(cell)`, which is equivalent to this API
+2021-05-05 19:23:07 WARNING  From run_tasks.py:140: dynamic_rnn (from tensorflow.python.ops.rnn) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `keras.layers.RNN(cell)`, which is equivalent to this API
+WARNING:tensorflow:From /root/NeuralTuringMachine/utils.py:25: dense (from tensorflow.python.keras.legacy_tf_layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.Dense instead.
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/utils.py:25: dense (from tensorflow.python.keras.legacy_tf_layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.Dense instead.
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/legacy_tf_layers/core.py:187: Layer.apply (from tensorflow.python.keras.engine.base_layer_v1) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.__call__` method instead.
+2021-05-05 19:23:07 WARNING  From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/legacy_tf_layers/core.py:187: Layer.apply (from tensorflow.python.keras.engine.base_layer_v1) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.__call__` method instead.
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/layers/legacy_rnn/rnn_cell_impl.py:740: Layer.add_variable (from tensorflow.python.keras.engine.base_layer_v1) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.add_weight` method instead.
+2021-05-05 19:23:08 WARNING  From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/layers/legacy_rnn/rnn_cell_impl.py:740: Layer.add_variable (from tensorflow.python.keras.engine.base_layer_v1) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.add_weight` method instead.
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/layers/legacy_rnn/rnn_cell_impl.py:744: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+2021-05-05 19:23:08 WARNING  From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/keras/layers/legacy_rnn/rnn_cell_impl.py:744: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+2021-05-05 19:23:13.200192: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-05 19:23:13.224222: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-05 19:23:13.224279: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-05 19:23:13.224542: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-05 19:23:13.235022: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-05 19:23:13.236888: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558a2a04a180 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-05 19:23:13.236930: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-05-05 21:33:10 INFO     Saved the trained model at step 1000.
+2021-05-05 21:33:10.754950: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-05 21:33:12.076956: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-05 21:33:12.102145: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-05 21:33:12.102190: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-05 21:33:12.102496: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-05 21:33:12.111800: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-05 21:33:12.114456: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5654633819e0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-05 21:33:12.114498: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/1000/my_model.ckpt before freezing
+2021-05-05 21:33:14 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/1000'], returncode=0)
+2021-05-05 21:33:14 INFO     Froze the model at step 1000.
+2021-05-05 21:33:14 INFO     ----EVAL----
+2021-05-05 21:33:14 INFO     target task error/loss: 10.0875,-1.163021695613861
+2021-05-05 21:33:14 INFO     multi task error/loss: None,None
+2021-05-05 21:33:14 INFO     curriculum point error/loss (None): None,None
+2021-05-05 21:33:14 INFO     EVAL_PARSABLE: 1000,10.0875,-1.163021695613861,None,None,None,None,None
+2021-05-05 23:42:58 INFO     Saved the trained model at step 2000.
+2021-05-05 23:42:58.660781: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-05 23:42:59.988061: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-05 23:43:00.018018: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-05 23:43:00.018057: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-05 23:43:00.018433: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-05 23:43:00.028969: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-05 23:43:00.030874: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x555e432eac30 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-05 23:43:00.030927: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/2000/my_model.ckpt before freezing
+2021-05-05 23:43:02 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/2000'], returncode=0)
+2021-05-05 23:43:02 INFO     Froze the model at step 2000.
+2021-05-05 23:43:02 INFO     ----EVAL----
+2021-05-05 23:43:02 INFO     target task error/loss: 9.5,22.82439250946045
+2021-05-05 23:43:02 INFO     multi task error/loss: None,None
+2021-05-05 23:43:02 INFO     curriculum point error/loss (None): None,None
+2021-05-05 23:43:02 INFO     EVAL_PARSABLE: 2000,9.5,22.82439250946045,None,None,None,None,None
+2021-05-06 01:52:24 INFO     Saved the trained model at step 3000.
+2021-05-06 01:52:25.117401: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 01:52:26.490062: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 01:52:26.515263: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 01:52:26.515307: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 01:52:26.515711: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 01:52:26.525617: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 01:52:26.527372: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x555ec73aec10 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 01:52:26.527408: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/3000/my_model.ckpt before freezing
+2021-05-06 01:52:29 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/3000'], returncode=0)
+2021-05-06 01:52:29 INFO     Froze the model at step 3000.
+2021-05-06 01:52:29 INFO     ----EVAL----
+2021-05-06 01:52:29 INFO     target task error/loss: 9.253125,21.302160835266115
+2021-05-06 01:52:29 INFO     multi task error/loss: None,None
+2021-05-06 01:52:29 INFO     curriculum point error/loss (None): None,None
+2021-05-06 01:52:29 INFO     EVAL_PARSABLE: 3000,9.253125,21.302160835266115,None,None,None,None,None
+2021-05-06 04:02:07 INFO     Saved the trained model at step 4000.
+2021-05-06 04:02:08.010433: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 04:02:09.312071: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 04:02:09.342117: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 04:02:09.342191: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 04:02:09.342582: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 04:02:09.353250: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 04:02:09.355915: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x556c23e942d0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 04:02:09.355954: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/4000/my_model.ckpt before freezing
+2021-05-06 04:02:12 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/4000'], returncode=0)
+2021-05-06 04:02:12 INFO     Froze the model at step 4000.
+2021-05-06 04:02:12 INFO     ----EVAL----
+2021-05-06 04:02:12 INFO     target task error/loss: 9.5375,19.949100494384766
+2021-05-06 04:02:12 INFO     multi task error/loss: None,None
+2021-05-06 04:02:12 INFO     curriculum point error/loss (None): None,None
+2021-05-06 04:02:12 INFO     EVAL_PARSABLE: 4000,9.5375,19.949100494384766,None,None,None,None,None
+2021-05-06 06:12:00 INFO     Saved the trained model at step 5000.
+2021-05-06 06:12:01.191764: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 06:12:02.486103: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 06:12:02.511107: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 06:12:02.511140: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 06:12:02.511460: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 06:12:02.521630: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 06:12:02.523636: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5563bec8c820 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 06:12:02.523672: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/5000/my_model.ckpt before freezing
+2021-05-06 06:12:05 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/5000'], returncode=0)
+2021-05-06 06:12:05 INFO     Froze the model at step 5000.
+2021-05-06 06:12:05 INFO     ----EVAL----
+2021-05-06 06:12:05 INFO     target task error/loss: 11.20625,-23.734900856018065
+2021-05-06 06:12:05 INFO     multi task error/loss: None,None
+2021-05-06 06:12:05 INFO     curriculum point error/loss (None): None,None
+2021-05-06 06:12:05 INFO     EVAL_PARSABLE: 5000,11.20625,-23.734900856018065,None,None,None,None,None
+2021-05-06 08:22:14 INFO     Saved the trained model at step 6000.
+2021-05-06 08:22:15.063168: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 08:22:16.342527: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 08:22:16.373388: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 08:22:16.373425: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 08:22:16.373716: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 08:22:16.383748: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 08:22:16.386131: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x564ee82de520 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 08:22:16.386168: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/6000/my_model.ckpt before freezing
+2021-05-06 08:22:19 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/6000'], returncode=0)
+2021-05-06 08:22:19 INFO     Froze the model at step 6000.
+2021-05-06 08:22:19 INFO     ----EVAL----
+2021-05-06 08:22:19 INFO     target task error/loss: 10.578125,-36.83166694641113
+2021-05-06 08:22:19 INFO     multi task error/loss: None,None
+2021-05-06 08:22:19 INFO     curriculum point error/loss (None): None,None
+2021-05-06 08:22:19 INFO     EVAL_PARSABLE: 6000,10.578125,-36.83166694641113,None,None,None,None,None
+2021-05-06 10:32:11 INFO     Saved the trained model at step 7000.
+2021-05-06 10:32:12.191112: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 10:32:13.471489: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 10:32:13.500077: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 10:32:13.500109: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 10:32:13.500399: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 10:32:13.512003: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 10:32:13.514902: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x56121027db40 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 10:32:13.514957: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/7000/my_model.ckpt before freezing
+2021-05-06 10:32:16 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/7000'], returncode=0)
+2021-05-06 10:32:16 INFO     Froze the model at step 7000.
+2021-05-06 10:32:16 INFO     ----EVAL----
+2021-05-06 10:32:16 INFO     target task error/loss: 9.51875,20.682875061035155
+2021-05-06 10:32:16 INFO     multi task error/loss: None,None
+2021-05-06 10:32:16 INFO     curriculum point error/loss (None): None,None
+2021-05-06 10:32:16 INFO     EVAL_PARSABLE: 7000,9.51875,20.682875061035155,None,None,None,None,None
+2021-05-06 12:42:31 INFO     Saved the trained model at step 8000.
+2021-05-06 12:42:32.116904: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 12:42:33.398207: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 12:42:33.422995: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 12:42:33.423036: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 12:42:33.423330: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 12:42:33.433152: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 12:42:33.434670: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x563f254bf4c0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 12:42:33.434711: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/8000/my_model.ckpt before freezing
+2021-05-06 12:42:36 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/8000'], returncode=0)
+2021-05-06 12:42:36 INFO     Froze the model at step 8000.
+2021-05-06 12:42:36 INFO     ----EVAL----
+2021-05-06 12:42:36 INFO     target task error/loss: 13.403125,17.93073558807373
+2021-05-06 12:42:36 INFO     multi task error/loss: None,None
+2021-05-06 12:42:36 INFO     curriculum point error/loss (None): None,None
+2021-05-06 12:42:36 INFO     EVAL_PARSABLE: 8000,13.403125,17.93073558807373,None,None,None,None,None
+2021-05-06 14:52:44 INFO     Saved the trained model at step 9000.
+2021-05-06 14:52:45.239702: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 14:52:46.520372: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 14:52:46.545024: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 14:52:46.545057: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 14:52:46.545345: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 14:52:46.556094: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 14:52:46.558701: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x563d47fd42f0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 14:52:46.558733: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/9000/my_model.ckpt before freezing
+2021-05-06 14:52:49 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/9000'], returncode=0)
+2021-05-06 14:52:49 INFO     Froze the model at step 9000.
+2021-05-06 14:52:49 INFO     ----EVAL----
+2021-05-06 14:52:49 INFO     target task error/loss: 12.390625,11.966219520568847
+2021-05-06 14:52:49 INFO     multi task error/loss: None,None
+2021-05-06 14:52:49 INFO     curriculum point error/loss (None): None,None
+2021-05-06 14:52:49 INFO     EVAL_PARSABLE: 9000,12.390625,11.966219520568847,None,None,None,None,None
+2021-05-06 17:03:07 INFO     Saved the trained model at step 10000.
+2021-05-06 17:03:08.343801: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 17:03:09.625694: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 17:03:09.654010: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 17:03:09.654045: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 17:03:09.654345: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 17:03:09.663741: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 17:03:09.665409: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x560f0a64c0d0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 17:03:09.665453: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/10000/my_model.ckpt before freezing
+2021-05-06 17:03:12 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/10000'], returncode=0)
+2021-05-06 17:03:12 INFO     Froze the model at step 10000.
+2021-05-06 17:03:12 INFO     ----EVAL----
+2021-05-06 17:03:12 INFO     target task error/loss: 12.36875,6.474078106880188
+2021-05-06 17:03:12 INFO     multi task error/loss: None,None
+2021-05-06 17:03:12 INFO     curriculum point error/loss (None): None,None
+2021-05-06 17:03:12 INFO     EVAL_PARSABLE: 10000,12.36875,6.474078106880188,None,None,None,None,None
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/training/saver.py:971: remove_checkpoint (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to delete files with this prefix.
+2021-05-06 19:13:39 WARNING  From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/training/saver.py:971: remove_checkpoint (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to delete files with this prefix.
+2021-05-06 19:13:40 INFO     Saved the trained model at step 11000.
+2021-05-06 19:13:40.662355: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 19:13:41.958100: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 19:13:41.987970: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 19:13:41.988012: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 19:13:41.988439: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 19:13:42.000780: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 19:13:42.002865: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x559aa0dfc700 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 19:13:42.002905: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/11000/my_model.ckpt before freezing
+2021-05-06 19:13:44 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/11000'], returncode=0)
+2021-05-06 19:13:44 INFO     Froze the model at step 11000.
+2021-05-06 19:13:44 INFO     ----EVAL----
+2021-05-06 19:13:44 INFO     target task error/loss: 9.3625,20.564469146728516
+2021-05-06 19:13:44 INFO     multi task error/loss: None,None
+2021-05-06 19:13:44 INFO     curriculum point error/loss (None): None,None
+2021-05-06 19:13:44 INFO     EVAL_PARSABLE: 11000,9.3625,20.564469146728516,None,None,None,None,None
+2021-05-06 21:24:20 INFO     Saved the trained model at step 12000.
+2021-05-06 21:24:21.217144: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 21:24:22.538316: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 21:24:22.563824: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 21:24:22.563857: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 21:24:22.564160: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 21:24:22.574105: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 21:24:22.576104: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x562f99307d80 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 21:24:22.576174: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/12000/my_model.ckpt before freezing
+2021-05-06 21:24:25 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/12000'], returncode=0)
+2021-05-06 21:24:25 INFO     Froze the model at step 12000.
+2021-05-06 21:24:25 INFO     ----EVAL----
+2021-05-06 21:24:25 INFO     target task error/loss: 13.65625,17.980636882781983
+2021-05-06 21:24:25 INFO     multi task error/loss: None,None
+2021-05-06 21:24:25 INFO     curriculum point error/loss (None): None,None
+2021-05-06 21:24:25 INFO     EVAL_PARSABLE: 12000,13.65625,17.980636882781983,None,None,None,None,None
+2021-05-06 23:34:43 INFO     Saved the trained model at step 13000.
+2021-05-06 23:34:44.549554: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-06 23:34:45.872358: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-06 23:34:45.896984: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-06 23:34:45.897017: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-06 23:34:45.897310: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-06 23:34:45.907677: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-06 23:34:45.910330: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x561cc5d76070 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-06 23:34:45.910372: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/13000/my_model.ckpt before freezing
+2021-05-06 23:34:48 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/13000'], returncode=0)
+2021-05-06 23:34:48 INFO     Froze the model at step 13000.
+2021-05-06 23:34:48 INFO     ----EVAL----
+2021-05-06 23:34:48 INFO     target task error/loss: 12.36875,-16.646747970581053
+2021-05-06 23:34:48 INFO     multi task error/loss: None,None
+2021-05-06 23:34:48 INFO     curriculum point error/loss (None): None,None
+2021-05-06 23:34:48 INFO     EVAL_PARSABLE: 13000,12.36875,-16.646747970581053,None,None,None,None,None
+2021-05-07 01:45:16 INFO     Saved the trained model at step 14000.
+2021-05-07 01:45:17.403640: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 01:45:18.695402: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 01:45:18.722634: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 01:45:18.722668: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 01:45:18.723084: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 01:45:18.733914: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 01:45:18.735989: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55e19303d980 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 01:45:18.736069: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/14000/my_model.ckpt before freezing
+2021-05-07 01:45:21 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/14000'], returncode=0)
+2021-05-07 01:45:21 INFO     Froze the model at step 14000.
+2021-05-07 01:45:21 INFO     ----EVAL----
+2021-05-07 01:45:21 INFO     target task error/loss: 9.51875,21.733541679382324
+2021-05-07 01:45:21 INFO     multi task error/loss: None,None
+2021-05-07 01:45:21 INFO     curriculum point error/loss (None): None,None
+2021-05-07 01:45:21 INFO     EVAL_PARSABLE: 14000,9.51875,21.733541679382324,None,None,None,None,None
+2021-05-07 03:55:40 INFO     Saved the trained model at step 15000.
+2021-05-07 03:55:41.313299: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 03:55:42.594201: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 03:55:42.618944: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 03:55:42.618980: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 03:55:42.619265: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 03:55:42.629111: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 03:55:42.631060: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5563c7afda30 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 03:55:42.631102: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/15000/my_model.ckpt before freezing
+2021-05-07 03:55:45 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/15000'], returncode=0)
+2021-05-07 03:55:45 INFO     Froze the model at step 15000.
+2021-05-07 03:55:45 INFO     ----EVAL----
+2021-05-07 03:55:45 INFO     target task error/loss: 9.39375,28.06536407470703
+2021-05-07 03:55:45 INFO     multi task error/loss: None,None
+2021-05-07 03:55:45 INFO     curriculum point error/loss (None): None,None
+2021-05-07 03:55:45 INFO     EVAL_PARSABLE: 15000,9.39375,28.06536407470703,None,None,None,None,None
+2021-05-07 06:06:25 INFO     Saved the trained model at step 16000.
+2021-05-07 06:06:25.585145: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 06:06:26.866087: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 06:06:26.891579: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 06:06:26.891611: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 06:06:26.891919: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 06:06:26.902054: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 06:06:26.904053: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55ca53455470 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 06:06:26.904145: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/16000/my_model.ckpt before freezing
+2021-05-07 06:06:29 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/16000'], returncode=0)
+2021-05-07 06:06:29 INFO     Froze the model at step 16000.
+2021-05-07 06:06:29 INFO     ----EVAL----
+2021-05-07 06:06:29 INFO     target task error/loss: 9.346875,-6.078729510307312
+2021-05-07 06:06:29 INFO     multi task error/loss: None,None
+2021-05-07 06:06:29 INFO     curriculum point error/loss (None): None,None
+2021-05-07 06:06:29 INFO     EVAL_PARSABLE: 16000,9.346875,-6.078729510307312,None,None,None,None,None
+2021-05-07 08:17:03 INFO     Saved the trained model at step 17000.
+2021-05-07 08:17:04.511592: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 08:17:05.884580: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 08:17:05.910129: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 08:17:05.910168: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 08:17:05.910562: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 08:17:05.921907: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 08:17:05.924379: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5644e99879e0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 08:17:05.924412: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/17000/my_model.ckpt before freezing
+2021-05-07 08:17:08 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/17000'], returncode=0)
+2021-05-07 08:17:08 INFO     Froze the model at step 17000.
+2021-05-07 08:17:08 INFO     ----EVAL----
+2021-05-07 08:17:08 INFO     target task error/loss: 12.903125,-15.453325605392456
+2021-05-07 08:17:08 INFO     multi task error/loss: None,None
+2021-05-07 08:17:08 INFO     curriculum point error/loss (None): None,None
+2021-05-07 08:17:08 INFO     EVAL_PARSABLE: 17000,12.903125,-15.453325605392456,None,None,None,None,None
+2021-05-07 10:28:10 INFO     Saved the trained model at step 18000.
+2021-05-07 10:28:10.778148: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 10:28:12.056937: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 10:28:12.082618: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 10:28:12.082652: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 10:28:12.082943: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 10:28:12.093013: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 10:28:12.095335: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558f9808b0b0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 10:28:12.095369: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/18000/my_model.ckpt before freezing
+2021-05-07 10:28:14 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/18000'], returncode=0)
+2021-05-07 10:28:14 INFO     Froze the model at step 18000.
+2021-05-07 10:28:14 INFO     ----EVAL----
+2021-05-07 10:28:14 INFO     target task error/loss: 11.48125,5.12533221244812
+2021-05-07 10:28:14 INFO     multi task error/loss: None,None
+2021-05-07 10:28:14 INFO     curriculum point error/loss (None): None,None
+2021-05-07 10:28:14 INFO     EVAL_PARSABLE: 18000,11.48125,5.12533221244812,None,None,None,None,None
+2021-05-07 12:39:27 INFO     Saved the trained model at step 19000.
+2021-05-07 12:39:28.310199: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 12:39:29.587155: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 12:39:29.611971: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 12:39:29.612008: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 12:39:29.612298: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 12:39:29.622534: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 12:39:29.624163: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x555e5de59c80 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 12:39:29.624195: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/19000/my_model.ckpt before freezing
+2021-05-07 12:39:32 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/19000'], returncode=0)
+2021-05-07 12:39:32 INFO     Froze the model at step 19000.
+2021-05-07 12:39:32 INFO     ----EVAL----
+2021-05-07 12:39:32 INFO     target task error/loss: 13.278125,25.17545289993286
+2021-05-07 12:39:32 INFO     multi task error/loss: None,None
+2021-05-07 12:39:32 INFO     curriculum point error/loss (None): None,None
+2021-05-07 12:39:32 INFO     EVAL_PARSABLE: 19000,13.278125,25.17545289993286,None,None,None,None,None
+2021-05-07 14:50:51 INFO     Saved the trained model at step 20000.
+2021-05-07 14:50:52.082831: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 14:50:53.371891: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 14:50:53.400042: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 14:50:53.400093: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 14:50:53.400425: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 14:50:53.410280: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 14:50:53.411929: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x56377ed90d30 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 14:50:53.411961: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/20000/my_model.ckpt before freezing
+2021-05-07 14:50:56 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/20000'], returncode=0)
+2021-05-07 14:50:56 INFO     Froze the model at step 20000.
+2021-05-07 14:50:56 INFO     ----EVAL----
+2021-05-07 14:50:56 INFO     target task error/loss: 11.525,-55.79918518066406
+2021-05-07 14:50:56 INFO     multi task error/loss: None,None
+2021-05-07 14:50:56 INFO     curriculum point error/loss (None): None,None
+2021-05-07 14:50:56 INFO     EVAL_PARSABLE: 20000,11.525,-55.79918518066406,None,None,None,None,None
+2021-05-07 17:01:46 INFO     Saved the trained model at step 21000.
+2021-05-07 17:01:47.482859: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 17:01:48.805651: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 17:01:48.830348: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 17:01:48.830387: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 17:01:48.830678: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 17:01:48.840835: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 17:01:48.842591: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x561acd267280 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 17:01:48.842622: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/21000/my_model.ckpt before freezing
+2021-05-07 17:01:51 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/21000'], returncode=0)
+2021-05-07 17:01:51 INFO     Froze the model at step 21000.
+2021-05-07 17:01:51 INFO     ----EVAL----
+2021-05-07 17:01:51 INFO     target task error/loss: 10.690625,-13.20432777404785
+2021-05-07 17:01:51 INFO     multi task error/loss: None,None
+2021-05-07 17:01:51 INFO     curriculum point error/loss (None): None,None
+2021-05-07 17:01:51 INFO     EVAL_PARSABLE: 21000,10.690625,-13.20432777404785,None,None,None,None,None
+2021-05-07 19:12:33 INFO     Saved the trained model at step 22000.
+2021-05-07 19:12:33.703483: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 19:12:35.008025: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 19:12:35.037934: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 19:12:35.037982: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 19:12:35.038348: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 19:12:35.049010: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 19:12:35.051549: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558fc0621bc0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 19:12:35.051580: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/22000/my_model.ckpt before freezing
+2021-05-07 19:12:37 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/22000'], returncode=0)
+2021-05-07 19:12:37 INFO     Froze the model at step 22000.
+2021-05-07 19:12:37 INFO     ----EVAL----
+2021-05-07 19:12:37 INFO     target task error/loss: 11.58125,-22.241658687591553
+2021-05-07 19:12:37 INFO     multi task error/loss: None,None
+2021-05-07 19:12:37 INFO     curriculum point error/loss (None): None,None
+2021-05-07 19:12:37 INFO     EVAL_PARSABLE: 22000,11.58125,-22.241658687591553,None,None,None,None,None
+2021-05-07 21:23:38 INFO     Saved the trained model at step 23000.
+2021-05-07 21:23:39.017713: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 21:23:40.406173: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 21:23:40.431519: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 21:23:40.431571: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 21:23:40.432107: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 21:23:40.443792: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 21:23:40.445886: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5641f31d9f50 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 21:23:40.445928: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/23000/my_model.ckpt before freezing
+2021-05-07 21:23:43 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/23000'], returncode=0)
+2021-05-07 21:23:43 INFO     Froze the model at step 23000.
+2021-05-07 21:23:43 INFO     ----EVAL----
+2021-05-07 21:23:43 INFO     target task error/loss: 9.396875,-10.64013442993164
+2021-05-07 21:23:43 INFO     multi task error/loss: None,None
+2021-05-07 21:23:43 INFO     curriculum point error/loss (None): None,None
+2021-05-07 21:23:43 INFO     EVAL_PARSABLE: 23000,9.396875,-10.64013442993164,None,None,None,None,None
+2021-05-07 23:34:10 INFO     Saved the trained model at step 24000.
+2021-05-07 23:34:10.794220: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-07 23:34:12.076670: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-07 23:34:12.101851: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-07 23:34:12.101886: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-07 23:34:12.102182: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-07 23:34:12.112720: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-07 23:34:12.114683: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55893b434ab0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-07 23:34:12.114728: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/24000/my_model.ckpt before freezing
+2021-05-07 23:34:14 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/24000'], returncode=0)
+2021-05-07 23:34:14 INFO     Froze the model at step 24000.
+2021-05-07 23:34:14 INFO     ----EVAL----
+2021-05-07 23:34:14 INFO     target task error/loss: 12.44375,-15.045026874542236
+2021-05-07 23:34:14 INFO     multi task error/loss: None,None
+2021-05-07 23:34:14 INFO     curriculum point error/loss (None): None,None
+2021-05-07 23:34:14 INFO     EVAL_PARSABLE: 24000,12.44375,-15.045026874542236,None,None,None,None,None
+2021-05-08 01:44:52 INFO     Saved the trained model at step 25000.
+2021-05-08 01:44:52.658388: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 01:44:53.947249: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 01:44:53.972177: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 01:44:53.972220: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 01:44:53.972510: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 01:44:53.982611: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 01:44:53.984446: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x56515760eab0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 01:44:53.984475: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/25000/my_model.ckpt before freezing
+2021-05-08 01:44:56 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/25000'], returncode=0)
+2021-05-08 01:44:56 INFO     Froze the model at step 25000.
+2021-05-08 01:44:56 INFO     ----EVAL----
+2021-05-08 01:44:56 INFO     target task error/loss: 10.415625,-75.11766395568847
+2021-05-08 01:44:56 INFO     multi task error/loss: None,None
+2021-05-08 01:44:56 INFO     curriculum point error/loss (None): None,None
+2021-05-08 01:44:56 INFO     EVAL_PARSABLE: 25000,10.415625,-75.11766395568847,None,None,None,None,None
+2021-05-08 03:55:30 INFO     Saved the trained model at step 26000.
+2021-05-08 03:55:31.396824: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 03:55:32.710157: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 03:55:32.735354: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 03:55:32.735387: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 03:55:32.735693: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 03:55:32.745776: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 03:55:32.747685: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x557ab2a3d600 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 03:55:32.747733: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/26000/my_model.ckpt before freezing
+2021-05-08 03:55:35 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/26000'], returncode=0)
+2021-05-08 03:55:35 INFO     Froze the model at step 26000.
+2021-05-08 03:55:35 INFO     ----EVAL----
+2021-05-08 03:55:35 INFO     target task error/loss: 10.453125,-35.293324089050294
+2021-05-08 03:55:35 INFO     multi task error/loss: None,None
+2021-05-08 03:55:35 INFO     curriculum point error/loss (None): None,None
+2021-05-08 03:55:35 INFO     EVAL_PARSABLE: 26000,10.453125,-35.293324089050294,None,None,None,None,None
+2021-05-08 06:06:06 INFO     Saved the trained model at step 27000.
+2021-05-08 06:06:07.409547: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 06:06:08.716487: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 06:06:08.746783: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 06:06:08.746826: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 06:06:08.747199: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 06:06:08.757994: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 06:06:08.759638: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55f45e114d90 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 06:06:08.759665: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/27000/my_model.ckpt before freezing
+2021-05-08 06:06:11 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/27000'], returncode=0)
+2021-05-08 06:06:11 INFO     Froze the model at step 27000.
+2021-05-08 06:06:11 INFO     ----EVAL----
+2021-05-08 06:06:11 INFO     target task error/loss: 14.203125,-43.406921005249025
+2021-05-08 06:06:11 INFO     multi task error/loss: None,None
+2021-05-08 06:06:11 INFO     curriculum point error/loss (None): None,None
+2021-05-08 06:06:11 INFO     EVAL_PARSABLE: 27000,14.203125,-43.406921005249025,None,None,None,None,None
+2021-05-08 08:16:38 INFO     Saved the trained model at step 28000.
+2021-05-08 08:16:38.796653: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 08:16:40.085324: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 08:16:40.109467: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 08:16:40.109500: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 08:16:40.109790: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 08:16:40.120064: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 08:16:40.121947: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x563566960a80 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 08:16:40.121984: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/28000/my_model.ckpt before freezing
+2021-05-08 08:16:42 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/28000'], returncode=0)
+2021-05-08 08:16:42 INFO     Froze the model at step 28000.
+2021-05-08 08:16:42 INFO     ----EVAL----
+2021-05-08 08:16:42 INFO     target task error/loss: 12.203125,-15.28672685623169
+2021-05-08 08:16:42 INFO     multi task error/loss: None,None
+2021-05-08 08:16:42 INFO     curriculum point error/loss (None): None,None
+2021-05-08 08:16:42 INFO     EVAL_PARSABLE: 28000,12.203125,-15.28672685623169,None,None,None,None,None
+2021-05-08 10:27:42 INFO     Saved the trained model at step 29000.
+2021-05-08 10:27:42.793296: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 10:27:44.073301: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 10:27:44.098053: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 10:27:44.098085: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 10:27:44.098376: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 10:27:44.109742: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 10:27:44.112412: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55a51da28980 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 10:27:44.112479: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/29000/my_model.ckpt before freezing
+2021-05-08 10:27:46 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/29000'], returncode=0)
+2021-05-08 10:27:46 INFO     Froze the model at step 29000.
+2021-05-08 10:27:46 INFO     ----EVAL----
+2021-05-08 10:27:46 INFO     target task error/loss: 11.4,-80.80458297729493
+2021-05-08 10:27:46 INFO     multi task error/loss: None,None
+2021-05-08 10:27:46 INFO     curriculum point error/loss (None): None,None
+2021-05-08 10:27:46 INFO     EVAL_PARSABLE: 29000,11.4,-80.80458297729493,None,None,None,None,None
+2021-05-08 12:38:30 INFO     Saved the trained model at step 30000.
+2021-05-08 12:38:31.320348: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 12:38:32.603191: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 12:38:32.631456: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 12:38:32.631503: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 12:38:32.631822: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 12:38:32.641954: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 12:38:32.643924: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5558c7e447d0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 12:38:32.643968: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/30000/my_model.ckpt before freezing
+2021-05-08 12:38:35 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/30000'], returncode=0)
+2021-05-08 12:38:35 INFO     Froze the model at step 30000.
+2021-05-08 12:38:35 INFO     ----EVAL----
+2021-05-08 12:38:35 INFO     target task error/loss: 11.396875,5.784920024871826
+2021-05-08 12:38:35 INFO     multi task error/loss: None,None
+2021-05-08 12:38:35 INFO     curriculum point error/loss (None): None,None
+2021-05-08 12:38:35 INFO     EVAL_PARSABLE: 30000,11.396875,5.784920024871826,None,None,None,None,None
+2021-05-08 14:49:02 INFO     Saved the trained model at step 31000.
+2021-05-08 14:49:02.791473: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 14:49:04.077077: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 14:49:04.101886: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 14:49:04.101923: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 14:49:04.102219: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 14:49:04.112071: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 14:49:04.113645: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x555bfc5bf760 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 14:49:04.113683: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/31000/my_model.ckpt before freezing
+2021-05-08 14:49:06 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/31000'], returncode=0)
+2021-05-08 14:49:06 INFO     Froze the model at step 31000.
+2021-05-08 14:49:06 INFO     ----EVAL----
+2021-05-08 14:49:06 INFO     target task error/loss: 10.596875,-0.9033747911453247
+2021-05-08 14:49:06 INFO     multi task error/loss: None,None
+2021-05-08 14:49:06 INFO     curriculum point error/loss (None): None,None
+2021-05-08 14:49:06 INFO     EVAL_PARSABLE: 31000,10.596875,-0.9033747911453247,None,None,None,None,None
+2021-05-08 16:59:43 INFO     Saved the trained model at step 32000.
+2021-05-08 16:59:43.710663: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 16:59:44.992248: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 16:59:45.021479: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 16:59:45.021515: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 16:59:45.021937: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 16:59:45.032191: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 16:59:45.033839: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x561162b3da80 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 16:59:45.033871: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/32000/my_model.ckpt before freezing
+2021-05-08 16:59:47 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/32000'], returncode=0)
+2021-05-08 16:59:47 INFO     Froze the model at step 32000.
+2021-05-08 16:59:47 INFO     ----EVAL----
+2021-05-08 16:59:47 INFO     target task error/loss: 10.296875,-20.41083526611328
+2021-05-08 16:59:47 INFO     multi task error/loss: None,None
+2021-05-08 16:59:47 INFO     curriculum point error/loss (None): None,None
+2021-05-08 16:59:47 INFO     EVAL_PARSABLE: 32000,10.296875,-20.41083526611328,None,None,None,None,None
+2021-05-08 19:10:20 INFO     Saved the trained model at step 33000.
+2021-05-08 19:10:21.249395: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 19:10:22.586314: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 19:10:22.611415: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 19:10:22.611447: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 19:10:22.611767: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 19:10:22.623516: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 19:10:22.625476: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x564bb3f0c820 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 19:10:22.625502: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/33000/my_model.ckpt before freezing
+2021-05-08 19:10:25 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/33000'], returncode=0)
+2021-05-08 19:10:25 INFO     Froze the model at step 33000.
+2021-05-08 19:10:25 INFO     ----EVAL----
+2021-05-08 19:10:25 INFO     target task error/loss: 9.5,-22.049872398376465
+2021-05-08 19:10:25 INFO     multi task error/loss: None,None
+2021-05-08 19:10:25 INFO     curriculum point error/loss (None): None,None
+2021-05-08 19:10:25 INFO     EVAL_PARSABLE: 33000,9.5,-22.049872398376465,None,None,None,None,None
+2021-05-08 21:21:18 INFO     Saved the trained model at step 34000.
+2021-05-08 21:21:18.743918: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 21:21:20.033132: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 21:21:20.057967: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 21:21:20.058001: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 21:21:20.058299: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 21:21:20.068885: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 21:21:20.071628: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55d93b980870 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 21:21:20.071667: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/34000/my_model.ckpt before freezing
+2021-05-08 21:21:22 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/34000'], returncode=0)
+2021-05-08 21:21:22 INFO     Froze the model at step 34000.
+2021-05-08 21:21:22 INFO     ----EVAL----
+2021-05-08 21:21:22 INFO     target task error/loss: 9.3125,-95.52096252441406
+2021-05-08 21:21:22 INFO     multi task error/loss: None,None
+2021-05-08 21:21:22 INFO     curriculum point error/loss (None): None,None
+2021-05-08 21:21:22 INFO     EVAL_PARSABLE: 34000,9.3125,-95.52096252441406,None,None,None,None,None
+2021-05-08 23:32:02 INFO     Saved the trained model at step 35000.
+2021-05-08 23:32:02.935320: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-08 23:32:04.260037: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-08 23:32:04.285275: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-08 23:32:04.285316: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-08 23:32:04.285669: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-08 23:32:04.296948: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-08 23:32:04.299590: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55f7ef89e960 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-08 23:32:04.299640: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/35000/my_model.ckpt before freezing
+2021-05-08 23:32:07 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/35000'], returncode=0)
+2021-05-08 23:32:07 INFO     Froze the model at step 35000.
+2021-05-08 23:32:07 INFO     ----EVAL----
+2021-05-08 23:32:07 INFO     target task error/loss: 10.565625,18.017401504516602
+2021-05-08 23:32:07 INFO     multi task error/loss: None,None
+2021-05-08 23:32:07 INFO     curriculum point error/loss (None): None,None
+2021-05-08 23:32:07 INFO     EVAL_PARSABLE: 35000,10.565625,18.017401504516602,None,None,None,None,None
+2021-05-09 01:42:49 INFO     Saved the trained model at step 36000.
+2021-05-09 01:42:50.548251: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 01:42:51.836023: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 01:42:51.860920: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 01:42:51.860956: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 01:42:51.861238: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 01:42:51.871953: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 01:42:51.874248: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55ce74654470 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 01:42:51.874286: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/36000/my_model.ckpt before freezing
+2021-05-09 01:42:54 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/36000'], returncode=0)
+2021-05-09 01:42:54 INFO     Froze the model at step 36000.
+2021-05-09 01:42:54 INFO     ----EVAL----
+2021-05-09 01:42:54 INFO     target task error/loss: 9.24375,-96.4735321044922
+2021-05-09 01:42:54 INFO     multi task error/loss: None,None
+2021-05-09 01:42:54 INFO     curriculum point error/loss (None): None,None
+2021-05-09 01:42:54 INFO     EVAL_PARSABLE: 36000,9.24375,-96.4735321044922,None,None,None,None,None
+2021-05-09 03:53:47 INFO     Saved the trained model at step 37000.
+2021-05-09 03:53:48.044348: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 03:53:49.354905: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 03:53:49.380321: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 03:53:49.380356: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 03:53:49.380651: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 03:53:49.390431: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 03:53:49.392313: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55c5e5694400 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 03:53:49.392345: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/37000/my_model.ckpt before freezing
+2021-05-09 03:53:52 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/37000'], returncode=0)
+2021-05-09 03:53:52 INFO     Froze the model at step 37000.
+2021-05-09 03:53:52 INFO     ----EVAL----
+2021-05-09 03:53:52 INFO     target task error/loss: 8.946875,-95.33635101318359
+2021-05-09 03:53:52 INFO     multi task error/loss: None,None
+2021-05-09 03:53:52 INFO     curriculum point error/loss (None): None,None
+2021-05-09 03:53:52 INFO     EVAL_PARSABLE: 37000,8.946875,-95.33635101318359,None,None,None,None,None
+2021-05-09 06:04:40 INFO     Saved the trained model at step 38000.
+2021-05-09 06:04:41.578059: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 06:04:42.866769: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 06:04:42.896043: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 06:04:42.896113: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 06:04:42.896445: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 06:04:42.907527: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 06:04:42.909501: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x56034c103ae0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 06:04:42.909539: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/38000/my_model.ckpt before freezing
+2021-05-09 06:04:45 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/38000'], returncode=0)
+2021-05-09 06:04:45 INFO     Froze the model at step 38000.
+2021-05-09 06:04:45 INFO     ----EVAL----
+2021-05-09 06:04:45 INFO     target task error/loss: 9.45625,-95.59585876464844
+2021-05-09 06:04:45 INFO     multi task error/loss: None,None
+2021-05-09 06:04:45 INFO     curriculum point error/loss (None): None,None
+2021-05-09 06:04:45 INFO     EVAL_PARSABLE: 38000,9.45625,-95.59585876464844,None,None,None,None,None
+2021-05-09 08:15:21 INFO     Saved the trained model at step 39000.
+2021-05-09 08:15:22.406432: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 08:15:23.695150: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 08:15:23.723818: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 08:15:23.723858: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 08:15:23.724150: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 08:15:23.733697: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 08:15:23.735315: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55f142e0a520 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 08:15:23.735354: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/39000/my_model.ckpt before freezing
+2021-05-09 08:15:26 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/39000'], returncode=0)
+2021-05-09 08:15:26 INFO     Froze the model at step 39000.
+2021-05-09 08:15:26 INFO     ----EVAL----
+2021-05-09 08:15:26 INFO     target task error/loss: 17.3625,-15.932738304138184
+2021-05-09 08:15:26 INFO     multi task error/loss: None,None
+2021-05-09 08:15:26 INFO     curriculum point error/loss (None): None,None
+2021-05-09 08:15:26 INFO     EVAL_PARSABLE: 39000,17.3625,-15.932738304138184,None,None,None,None,None
+2021-05-09 10:25:53 INFO     Saved the trained model at step 40000.
+2021-05-09 10:25:53.669706: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 10:25:54.969995: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 10:25:54.995455: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 10:25:54.995490: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 10:25:54.995806: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 10:25:55.005867: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 10:25:55.008003: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55efb45aacb0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 10:25:55.008038: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/40000/my_model.ckpt before freezing
+2021-05-09 10:25:57 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/40000'], returncode=0)
+2021-05-09 10:25:57 INFO     Froze the model at step 40000.
+2021-05-09 10:25:57 INFO     ----EVAL----
+2021-05-09 10:25:57 INFO     target task error/loss: 14.040625,-1.3798778772354126
+2021-05-09 10:25:57 INFO     multi task error/loss: None,None
+2021-05-09 10:25:57 INFO     curriculum point error/loss (None): None,None
+2021-05-09 10:25:57 INFO     EVAL_PARSABLE: 40000,14.040625,-1.3798778772354126,None,None,None,None,None
+2021-05-09 12:36:40 INFO     Saved the trained model at step 41000.
+2021-05-09 12:36:41.597705: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 12:36:42.881793: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 12:36:42.910137: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 12:36:42.910173: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 12:36:42.910457: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 12:36:42.921301: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 12:36:42.923331: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558e18c30100 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 12:36:42.923374: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/41000/my_model.ckpt before freezing
+2021-05-09 12:36:45 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/41000'], returncode=0)
+2021-05-09 12:36:45 INFO     Froze the model at step 41000.
+2021-05-09 12:36:45 INFO     ----EVAL----
+2021-05-09 12:36:45 INFO     target task error/loss: 9.25625,-15.828232288360596
+2021-05-09 12:36:45 INFO     multi task error/loss: None,None
+2021-05-09 12:36:45 INFO     curriculum point error/loss (None): None,None
+2021-05-09 12:36:45 INFO     EVAL_PARSABLE: 41000,9.25625,-15.828232288360596,None,None,None,None,None
+2021-05-09 14:47:30 INFO     Saved the trained model at step 42000.
+2021-05-09 14:47:31.493412: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+2021-05-09 14:47:32.819958: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2021-05-09 14:47:32.844955: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2021-05-09 14:47:32.844996: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (hermine): /proc/driver/nvidia/version does not exist
+2021-05-09 14:47:32.845287: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-09 14:47:32.855281: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2294605000 Hz
+2021-05-09 14:47:32.856816: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5559ea65b1a0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-09 14:47:32.856859: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From /root/NeuralTuringMachine/freeze.py:47: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From /root/NeuralTuringMachine/venv/lib/python3.7/site-packages/tensorflow/python/framework/convert_to_constants.py:854: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+Tensorflow reading models/42000/my_model.ckpt before freezing
+2021-05-09 14:47:35 INFO     CompletedProcess(args=['/root/NeuralTuringMachine/venv/bin/python', '/root/NeuralTuringMachine/freeze.py', '--checkpoint_dir', 'models/42000'], returncode=0)
+2021-05-09 14:47:35 INFO     Froze the model at step 42000.
+2021-05-09 14:47:35 INFO     ----EVAL----
+2021-05-09 14:47:35 INFO     target task error/loss: 12.43125,-31.342733955383302
+2021-05-09 14:47:35 INFO     multi task error/loss: None,None
+2021-05-09 14:47:35 INFO     curriculum point error/loss (None): None,None
+2021-05-09 14:47:35 INFO     EVAL_PARSABLE: 42000,12.43125,-31.342733955383302,None,None,None,None,None
