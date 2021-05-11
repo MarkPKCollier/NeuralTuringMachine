@@ -123,6 +123,7 @@ def generate_batches(num_batches, batch_size, bits_per_vector, numbers_quantity,
     decoded_tuple, decoder = tpr.model_2_tuple.decode_model_2_tuple_tpr(flattened_encoded_tuple)
 
     bits_per_number = single_tpr_len(two_tuple_largest_scale_size)
+    print(bits_per_number)
 
     batches = []
     for i in range(num_batches):
@@ -206,6 +207,6 @@ if __name__ == '__main__':
                                       two_tuple_weight_precision=1,
                                       two_tuple_alpha_precision=1,
                                       two_tuple_largest_scale_size=5,
-                                      cli_mode=True)
+                                      cli_mode=False)
     after = time.time() - before
     print(f'Time elapsed: {after}')
